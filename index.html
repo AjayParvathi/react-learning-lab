@@ -136,10 +136,13 @@ tr:hover td{background:rgba(255,255,255,0.02)}
     <button class="nav-btn" onclick="show('patterns',this)"><span class="icon">&#127959;</span>Patterns</button>
     <button class="nav-btn" onclick="show('typescript',this)"><span class="icon">&#128216;</span>TypeScript</button>
     <button class="nav-btn" onclick="show('statemanagement',this)"><span class="icon">&#128451;</span>State Management</button>
+    <button class="nav-btn" onclick="show('reduxdeep',this)"><span class="icon">&#9874;</span>Redux Toolkit <span class="new-tag">DEEP</span></button>
+    <button class="nav-btn" onclick="show('reactquerydeep',this)"><span class="icon">&#128200;</span>React Query <span class="new-tag">DEEP</span></button>
   </div>
   <div class="nav-group">
     <div class="nav-group-label">Production</div>
     <button class="nav-btn" onclick="show('testing',this)"><span class="icon">&#129514;</span>Testing</button>
+    <button class="nav-btn" onclick="show('security',this)"><span class="icon">&#128274;</span>Security</button>
     <button class="nav-btn" onclick="show('deploy',this)"><span class="icon">&#128640;</span>Deployment</button>
     <button class="nav-btn" onclick="show('vdom',this)"><span class="icon">&#9881;</span>Virtual DOM</button>
     <button class="nav-btn" onclick="show('roadmap',this)"><span class="icon">&#128506;</span>Dev Roadmap</button>
@@ -264,13 +267,27 @@ const key = import.meta.env.VITE_API_KEY</pre>
       <tr><td><code>React DevTools (browser)</code></td><td>Inspect component tree, props, state in the browser</td></tr>
     </table></div>
   </div>
+  <div class="card">
+    <div class="card-title">&#9656; How to read React error messages</div>
+    <div class="card-desc">React error messages are very descriptive once you know how to read them. Here are the most common ones and what they actually mean:</div>
+    <div class="table-wrap"><table>
+      <tr><th>Error message</th><th>What it means</th><th>Fix</th></tr>
+      <tr><td><code>Cannot read properties of undefined</code></td><td>You&#8217;re accessing a property on something that doesn&#8217;t exist yet</td><td>Add a null check: <code>user?.name</code> or check if data loaded</td></tr>
+      <tr><td><code>Too many re-renders</code></td><td>Your component is in an infinite render loop</td><td>You&#8217;re calling setState during render without a condition, or a useEffect has wrong deps</td></tr>
+      <tr><td><code>Each child in a list should have a unique "key" prop</code></td><td>Missing key in .map()</td><td>Add <code>key={item.id}</code> to each element in your list</td></tr>
+      <tr><td><code>Rendered more hooks than during the previous render</code></td><td>Hook count changed between renders</td><td>You have a hook inside a condition or loop — move it to the top level</td></tr>
+      <tr><td><code>Objects are not valid as a React child</code></td><td>You&#8217;re trying to render a plain JS object</td><td>Access a specific property: <code>{user.name}</code> not <code>{user}</code></td></tr>
+      <tr><td><code>Warning: An update to X inside a test was not wrapped in act()</code></td><td>Async update in tests not handled properly</td><td>Use <code>await</code> with <code>findBy*</code> queries or wrap in <code>act()</code></td></tr>
+    </table></div>
+  </div>
+
 </div>
 
 <!-- JSX -->
 <div class="section" id="jsx">
   <div class="page-header">
     <h1 class="page-title">JSX</h1>
-    <p class="page-sub">JSX is the syntax that lets you write HTML-like code inside JavaScript. React compiles it to regular function calls.</p>
+    <p class="page-sub">JSX (JavaScript XML) is a syntax extension for JavaScript that lets you write HTML-like code inside JavaScript files. It is not HTML — it compiles to <code>React.createElement()</code> function calls. JSX makes it intuitive to describe what the UI should look like alongside the logic that drives it.</p>
   </div>
   <div class="two-col">
     <div class="card">
@@ -284,6 +301,20 @@ const key = import.meta.env.VITE_API_KEY</pre>
 )</pre>
     </div>
   </div>
+  <div class="card">
+    <div class="card-title">&#9656; The mental model — JSX is just function calls</div>
+    <div class="card-desc">Think of JSX as a <strong>shorthand for creating UI descriptions</strong>. It is not HTML, not a template language, and not magic. Every JSX tag is a call to <code>React.createElement</code> which returns a plain JavaScript object — a description of what to render.<br><br>This means JSX follows JavaScript rules, not HTML rules. Anything that is valid in a JavaScript expression can go inside <code>{ }</code>. Anything that is not an expression (statements like <code>if/for</code>) must be replaced with expression equivalents (ternary, <code>&&</code>, <code>.map()</code>).</div>
+    <div class="table-wrap"><table>
+      <tr><th>HTML attribute</th><th>JSX equivalent</th><th>Why different</th></tr>
+      <tr><td><code>class</code></td><td><code>className</code></td><td><code>class</code> is a reserved JS keyword</td></tr>
+      <tr><td><code>for</code></td><td><code>htmlFor</code></td><td><code>for</code> is a reserved JS keyword</td></tr>
+      <tr><td><code>onclick</code></td><td><code>onClick</code></td><td>Events are camelCase in JSX</td></tr>
+      <tr><td><code>tabindex</code></td><td><code>tabIndex</code></td><td>All attributes become camelCase</td></tr>
+      <tr><td><code>stroke-width</code></td><td><code>strokeWidth</code></td><td>Hyphens become camelCase</td></tr>
+      <tr><td><code>style="color:red"</code></td><td><code>style={{ color: 'red' }}</code></td><td>Styles are objects, not strings</td></tr>
+    </table></div>
+  </div>
+
   <div class="card">
     <div class="card-title">5 rules of JSX</div>
     <div class="table-wrap"><table>
@@ -318,6 +349,23 @@ function App() {
     <div class="info">Comments in JSX use <code>{/* like this */}</code> — not <code>//</code> outside curly braces.</div>
   </div>
   <div class="card">
+    <div class="card-title">&#9656; JSX quick-reference cheatsheet</div>
+    <div class="table-wrap"><table>
+      <tr><th>Pattern</th><th>JSX</th><th>What it does</th></tr>
+      <tr><td>Variable</td><td><code>{name}</code></td><td>Renders a string or number</td></tr>
+      <tr><td>Ternary</td><td><code>{ok ? &lt;A /&gt; : &lt;B /&gt;}</code></td><td>Show A or B</td></tr>
+      <tr><td>Short-circuit</td><td><code>{ok &amp;&amp; &lt;A /&gt;}</code></td><td>Show A or nothing</td></tr>
+      <tr><td>List</td><td><code>{items.map(i =&gt; &lt;li key={i.id}&gt;{i.name}&lt;/li&gt;)}</code></td><td>Render a list</td></tr>
+      <tr><td>Style object</td><td><code>style={{ color: 'red', fontSize: 16 }}</code></td><td>Inline styles as JS object</td></tr>
+      <tr><td>Spread props</td><td><code>&lt;input {...inputProps} /&gt;</code></td><td>Pass all props at once</td></tr>
+      <tr><td>Comment</td><td><code>{/* comment */}</code></td><td>JSX comment — invisible in output</td></tr>
+      <tr><td>Fragment</td><td><code>&lt;&gt;...&lt;/&gt;</code></td><td>Wrap without adding a DOM node</td></tr>
+      <tr><td>Null</td><td><code>{condition ? &lt;A /&gt; : null}</code></td><td>Render nothing</td></tr>
+      <tr><td>Dynamic tag</td><td><code>const Tag = 'h'+n; &lt;Tag /&gt;</code></td><td>Choose element type at runtime</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card">
     <div class="card-title">Fragments — avoid extra DOM nodes</div>
     <pre>// Short syntax — use this 99% of the time
 return (
@@ -341,7 +389,7 @@ return (
 <div class="section" id="components">
   <div class="page-header">
     <h1 class="page-title">Components &amp; Props</h1>
-    <p class="page-sub">Components are functions that return JSX. Props are the inputs you pass to them — like function arguments.</p>
+    <p class="page-sub">A component is a self-contained, reusable piece of UI. In React, components are JavaScript functions that receive data (called <strong>props</strong>) and return JSX describing what should appear on screen. Your entire app is a tree of components — from the root <code>App</code> down to individual buttons.</p>
   </div>
   <div class="two-col">
     <div class="card">
@@ -416,6 +464,68 @@ const UserCard = ({ user }) =&gt; {
 }</pre>
   </div>
   <div class="card">
+    <div class="card-title">&#9656; Pure components &amp; immutability — never mutate state directly</div>
+    <div class="card-desc">A <strong>pure component</strong> always returns the same output for the same input — no side effects, no mutations. React components should be pure: given the same props and state, return the same JSX.<br><br><strong>Immutability</strong> is the rule: never modify state directly. React uses reference equality (<code>===</code>) to detect changes. If you mutate an object in place, the reference stays the same, React sees no change, and the UI never updates.</div>
+    <pre>// WRONG — mutating state directly (most common beginner bug)
+const addItem = () => {
+  items.push(newItem)      // mutates the array — same reference!
+  setItems(items)          // React: "same array, no change" → no re-render
+}
+
+const updateUser = () => {
+  user.name = 'Aj'         // mutates the object — same reference!
+  setUser(user)            // React: "same object, no change" → no re-render
+}
+
+// CORRECT — always create a new value
+const addItem    = () => setItems(prev => [...prev, newItem])
+const removeItem = (id) => setItems(prev => prev.filter(i => i.id !== id))
+const updateItem = (id, changes) => setItems(prev =>
+  prev.map(i => i.id === id ? { ...i, ...changes } : i)
+)
+const updateUser = () => setUser(prev => ({ ...prev, name: 'Aj' }))
+
+// Nested objects — must spread every level that changes
+const updateCity = (city) => setUser(prev => ({
+  ...prev,
+  address: { ...prev.address, city }  // new nested object too
+}))</pre>
+    <div class="warn">Mutating state is the #1 cause of "my component didn&#8217;t update" bugs. Always return a new array/object.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Lifting state up — share state between sibling components</div>
+    <div class="card-desc">When two sibling components need to share data, move the state to their <strong>closest common parent</strong> and pass it down as props. This is called <strong>lifting state up</strong> — one of the most important React patterns.</div>
+    <pre>// PROBLEM — siblings can't share state with each other
+const SearchInput = () => {
+  const [query, setQuery] = useState('')
+  // FilterList also needs query, but it's a sibling, not a child
+}
+const FilterList = () => { /* can't access SearchInput's query */ }
+
+// SOLUTION — lift state to the closest common parent
+const SearchPage = () => {
+  const [query, setQuery] = useState('')  // lifted here
+
+  return (
+    &lt;div&gt;
+      &lt;SearchInput query={query} onQueryChange={setQuery} /&gt;
+      &lt;FilterList  query={query} /&gt;
+    &lt;/div&gt;
+  )
+}
+
+const SearchInput = ({ query, onQueryChange }) => (
+  &lt;input value={query} onChange={e => onQueryChange(e.target.value)} /&gt;
+)
+const FilterList = ({ query }) => {
+  const results = items.filter(i => i.name.toLowerCase().includes(query.toLowerCase()))
+  return &lt;ul&gt;{results.map(i => &lt;li key={i.id}&gt;{i.name}&lt;/li&gt;)}&lt;/ul&gt;
+}</pre>
+    <div class="tip">Lift state only as high as needed — not all the way to a global store. If only 2 siblings need it, a shared parent is enough.</div>
+  </div>
+
+  <div class="card">
     <div class="card-title">Prop spreading — passing many props at once</div>
     <pre>// Instead of writing each prop manually, spread them
 const inputProps = {
@@ -437,7 +547,7 @@ const MyInput = ({ label, ...rest }) =&gt; (
 <div class="section" id="events">
   <div class="page-header">
     <h1 class="page-title">Events</h1>
-    <p class="page-sub">React events are camelCase and take a function reference. They work identically across all browsers.</p>
+    <p class="page-sub">Events are how your UI responds to user actions — clicks, typing, form submissions, scrolling. React wraps browser events in a <strong>SyntheticEvent</strong> system that normalises behaviour across all browsers. Event handlers are camelCase in React (<code>onClick</code>, not <code>onclick</code>) and receive a function reference — not a string like in raw HTML.</p>
   </div>
   <div class="card">
     <div class="card-title">Always pass a reference — not a call</div>
@@ -479,6 +589,63 @@ const handleKeyDown = (e) =&gt; { if (e.key === 'Enter') submit() }
 const handleCheck   = (e) =&gt; console.log(e.target.checked)  // checkbox</pre>
   </div>
   <div class="card">
+    <div class="card-title">&#9656; Event bubbling &amp; stopPropagation</div>
+    <div class="card-desc">Events <strong>bubble</strong> up through the DOM — when you click a button inside a div, both the button&#8217;s and div&#8217;s click handlers fire. Sometimes you want to stop this.</div>
+    <pre>const Card = () =&gt; {
+  const handleCardClick = () =&gt; console.log('Card clicked')
+  const handleButtonClick = (e) =&gt; {
+    e.stopPropagation()    // stops event from bubbling to Card
+    console.log('Button clicked only')
+  }
+
+  return (
+    &lt;div onClick={handleCardClick}&gt;    {/* fires on any click inside */}
+      &lt;h2&gt;Title&lt;/h2&gt;
+      &lt;button onClick={handleButtonClick}&gt;
+        Click Me (won't trigger card)
+      &lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+
+// e.preventDefault() — stop default browser behaviour
+const Link = () =&gt; (
+  &lt;a href="/somewhere" onClick={(e) =&gt; {
+    e.preventDefault()   // stop browser navigation
+    console.log('Intercepted!')
+  }}&gt;Click&lt;/a&gt;
+)
+
+// Keyboard events — detect specific keys
+const SearchBox = () =&gt; (
+  &lt;input
+    onKeyDown={(e) =&gt; {
+      if (e.key === 'Enter')  submitSearch()
+      if (e.key === 'Escape') clearSearch()
+      if (e.ctrlKey &amp;&amp; e.key === 'k') openCommandPalette()
+    }}
+  /&gt;
+)</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Synthetic Events — React&#8217;s cross-browser wrapper</div>
+    <div class="card-desc">React wraps all browser events in a <strong>SyntheticEvent</strong> object. This ensures consistent behaviour across all browsers. The SyntheticEvent has the same interface as native browser events, so you use it exactly the same way.</div>
+    <div class="table-wrap"><table>
+      <tr><th>Property / Method</th><th>What it gives you</th></tr>
+      <tr><td><code>e.target</code></td><td>The element that triggered the event</td></tr>
+      <tr><td><code>e.target.value</code></td><td>Current value of an input/select/textarea</td></tr>
+      <tr><td><code>e.target.checked</code></td><td>Whether a checkbox is checked</td></tr>
+      <tr><td><code>e.target.name</code></td><td>The <code>name</code> attribute of the input</td></tr>
+      <tr><td><code>e.target.files</code></td><td>Files from a file input</td></tr>
+      <tr><td><code>e.key</code></td><td>Which key was pressed (<code>'Enter'</code>, <code>'Escape'</code>, <code>'a'</code>)</td></tr>
+      <tr><td><code>e.preventDefault()</code></td><td>Stop default browser action (form submit, link navigate)</td></tr>
+      <tr><td><code>e.stopPropagation()</code></td><td>Stop event from bubbling to parent elements</td></tr>
+      <tr><td><code>e.clientX / e.clientY</code></td><td>Mouse cursor position on screen</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card">
     <div class="card-title">Common events</div>
     <div class="table-wrap"><table>
       <tr><th>Event</th><th>When it fires</th></tr>
@@ -497,8 +664,65 @@ const handleCheck   = (e) =&gt; console.log(e.target.checked)  // checkbox</pre>
 <div class="section" id="hooks">
   <div class="page-header">
     <h1 class="page-title">All React Hooks</h1>
-    <p class="page-sub">Hooks are functions starting with <code>use</code>. Call them only at the top level of your component — never inside loops, conditions, or nested functions.</p>
+    <p class="page-sub">Hooks are special functions that start with <code>use</code> and let you add React features (state, side effects, context, refs) to function components. Before hooks (pre-2019), you needed class components for these features. Hooks must always be called at the top level of a component — never inside loops, conditions, or nested functions — so React can track them in the same order every render.</p>
   </div>
+  <div class="card">
+    <div class="card-title">&#9656; Stale closures — the most common hook bug</div>
+    <div class="card-desc">A <strong>stale closure</strong> happens when a function "captures" an old value of a variable and never sees updates. This is the #1 confusing bug beginners hit with <code>useEffect</code> and <code>useCallback</code>.</div>
+    <pre>// BUG — stale closure
+const Counter = () => {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log(count)     // always logs 0 — captures the initial value!
+      setCount(count + 1)    // always sets to 0 + 1 = 1, never increments
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])  // empty deps = effect never re-runs = count is forever 0 inside
+
+  return &lt;p&gt;{count}&lt;/p&gt;
+}
+
+// FIX 1: add count to dependency array — re-creates interval when count changes
+useEffect(() => {
+  const interval = setInterval(() => setCount(count + 1), 1000)
+  return () => clearInterval(interval)
+}, [count])
+
+// FIX 2: use the updater function — doesn't need to "see" current count
+useEffect(() => {
+  const interval = setInterval(() => setCount(prev => prev + 1), 1000)
+  return () => clearInterval(interval)
+}, [])  // safe — updater function always gets fresh value</pre>
+    <div class="good">Rule of thumb: whenever you use state inside <code>useEffect</code>, use the <code>prev => prev + 1</code> updater form, or add the value to the dependency array. ESLint&#8217;s <code>exhaustive-deps</code> rule catches stale closures automatically.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Automatic batching — React 18 groups state updates</div>
+    <div class="card-desc"><strong>Batching</strong> means React groups multiple <code>setState</code> calls into a single re-render. Before React 18, batching only worked inside React event handlers. In React 18+, it works everywhere — inside timeouts, promises, and async functions too.</div>
+    <pre>// React 18 — automatic batching everywhere
+const handleClick = async () => {
+  setLoading(true)
+  setError(null)
+  setData(null)
+  // React 18: one re-render (batched), not three
+}
+
+setTimeout(() => {
+  setCount(c => c + 1)
+  setName('Aj')
+  // React 18: one re-render (batched)
+  // React 17: two separate re-renders
+}, 1000)
+
+// Force immediate re-render between updates (rare — avoid this)
+import { flushSync } from 'react-dom'
+flushSync(() => setCount(c => c + 1))   // renders immediately
+flushSync(() => setName('Aj'))           // renders immediately
+// Use flushSync only for third-party integrations that need sync DOM updates</pre>
+  </div>
+
   <div class="divider">State</div>
   <div class="acc"><div class="acc-header" onclick="toggle('useState')"><div class="acc-header-text"><h3>useState — store a changing value</h3><p>The most used hook. When state changes, the component re-renders.</p></div><span class="acc-arrow" id="arr-useState">&#9654;</span></div>
   <div class="acc-body" id="useState">
@@ -635,6 +859,23 @@ useEffect(() =&gt; {
   return () =&gt; sub.unsubscribe()
 }, [userId])</pre>
     <div class="warn">Always clean up subscriptions, event listeners, and timers. Missing cleanup causes memory leaks.</div>
+    <pre>// WHAT HAPPENS TIMELINE:
+// 1. Component mounts          → effect runs  → starts subscription/timer
+// 2. Dependency changes        → cleanup runs → stops old subscription
+//                              → effect runs  → starts new subscription  
+// 3. Component unmounts        → cleanup runs → stops subscription
+
+// MEMORY LEAK — missing cleanup
+useEffect(() => {
+  window.addEventListener('resize', handler)
+  // nothing returned — handler NEVER removed — leak!
+}, [])
+
+// CORRECT — cleanup removes the listener
+useEffect(() => {
+  window.addEventListener('resize', handler)
+  return () => window.removeEventListener('resize', handler)
+}, [])</pre>
   </div></div>
 
   <div class="acc"><div class="acc-header" onclick="toggle('useLayoutEffect')"><div class="acc-header-text"><h3>useLayoutEffect — run before browser paints</h3><p>Same as useEffect but fires synchronously after DOM updates. Use only when measuring DOM size/position.</p></div><span class="acc-arrow" id="arr-useLayoutEffect">&#9654;</span></div>
@@ -835,7 +1076,7 @@ const useOnlineStatus = () =&gt; {
 <div class="section" id="react19">
   <div class="page-header">
     <h1 class="page-title">React 19 — New Hooks</h1>
-    <p class="page-sub">React 19 became stable in December 2024. It introduced hooks for async actions, optimistic UI, and simplified form handling — the biggest additions since hooks launched in 2019.</p>
+    <p class="page-sub">React 19 became stable in December 2024. It introduced hooks for async actions, optimistic UI, and simplified form handling — the biggest additions since hooks launched in 2019. The central theme of React 19 is <strong>Actions</strong>: async functions that handle form submissions, pending states, and errors automatically, eliminating the repetitive <code>useState + useEffect + loading + error</code> pattern for async operations.</p>
   </div>
   <div class="card">
     <div class="card-title">What's new at a glance</div>
@@ -991,7 +1232,7 @@ const Button = ({ isDark }) =&gt; {
 <div class="section" id="custom">
   <div class="page-header">
     <h1 class="page-title">Custom Hooks</h1>
-    <p class="page-sub">A custom hook is a function starting with <code>use</code> that calls other hooks inside. Extracts and shares stateful logic between components without repetition.</p>
+    <p class="page-sub">Custom hooks are how you reuse stateful logic between components. Whenever you find yourself copying the same <code>useState + useEffect</code> pattern into multiple components, extract it into a custom hook. A custom hook is just a regular JavaScript function that starts with <code>use</code> and can call other hooks inside it. Unlike components, custom hooks return data — not JSX.</p>
   </div>
   <div class="card">
     <div class="card-title">useFetch — reusable data loading</div>
@@ -1144,13 +1385,133 @@ const Layout = () =&gt; {
 }</pre>
     </div>
   </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">useWindowSize</div>
+      <pre>import { useState, useEffect } from 'react'
+
+const useWindowSize = () =&gt; {
+  const [size, setSize] = useState({
+    width:  window.innerWidth,
+    height: window.innerHeight,
+  })
+
+  useEffect(() =&gt; {
+    const handler = () =&gt; setSize({
+      width:  window.innerWidth,
+      height: window.innerHeight,
+    })
+    window.addEventListener('resize', handler)
+    return () =&gt; window.removeEventListener('resize', handler)
+  }, [])
+
+  return size
+}
+
+// Usage
+const App = () =&gt; {
+  const { width, height } = useWindowSize()
+  return (
+    &lt;p&gt;{width} x {height}&lt;/p&gt;
+  )
+}</pre>
+    </div>
+    <div class="card">
+      <div class="card-title">useOnClickOutside</div>
+      <pre>import { useEffect } from 'react'
+
+const useOnClickOutside = (ref, handler) =&gt; {
+  useEffect(() =&gt; {
+    const listener = (e) =&gt; {
+      if (!ref.current || ref.current.contains(e.target)) {
+        return   // click was inside — ignore
+      }
+      handler(e) // click was outside — call handler
+    }
+    document.addEventListener('mousedown', listener)
+    document.addEventListener('touchstart', listener)
+    return () =&gt; {
+      document.removeEventListener('mousedown', listener)
+      document.removeEventListener('touchstart', listener)
+    }
+  }, [ref, handler])
+}
+
+// Usage — close dropdown on outside click
+const Dropdown = () =&gt; {
+  const [open, setOpen] = useState(false)
+  const ref = useRef()
+  useOnClickOutside(ref, () =&gt; setOpen(false))
+
+  return (
+    &lt;div ref={ref}&gt;
+      &lt;button onClick={() =&gt; setOpen(o =&gt; !o)}&gt;Menu&lt;/button&gt;
+      {open &amp;&amp; &lt;ul&gt;&lt;li&gt;Item 1&lt;/li&gt;&lt;li&gt;Item 2&lt;/li&gt;&lt;/ul&gt;}
+    &lt;/div&gt;
+  )
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">useAsync — handle async operations cleanly</div>
+    <pre>import { useState, useCallback } from 'react'
+
+const useAsync = (asyncFn) =&gt; {
+  const [status,  setStatus]  = useState('idle')   // idle | loading | success | error
+  const [data,    setData]    = useState(null)
+  const [error,   setError]   = useState(null)
+
+  const execute = useCallback(async (...args) =&gt; {
+    setStatus('loading')
+    setError(null)
+    try {
+      const result = await asyncFn(...args)
+      setData(result)
+      setStatus('success')
+      return result
+    } catch (err) {
+      setError(err.message)
+      setStatus('error')
+      throw err
+    }
+  }, [asyncFn])
+
+  return {
+    execute,
+    data,
+    error,
+    status,
+    isIdle:    status === 'idle',
+    isLoading: status === 'loading',
+    isSuccess: status === 'success',
+    isError:   status === 'error',
+  }
+}
+
+// Usage
+const SubmitButton = () =&gt; {
+  const { execute, isLoading, isSuccess, isError, error } = useAsync(submitForm)
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; execute({ name: 'Aj' })} disabled={isLoading}&gt;
+        {isLoading ? 'Submitting...' : 'Submit'}
+      &lt;/button&gt;
+      {isSuccess &amp;&amp; &lt;p&gt;Success!&lt;/p&gt;}
+      {isError   &amp;&amp; &lt;p&gt;Error: {error}&lt;/p&gt;}
+    &lt;/div&gt;
+  )
+}</pre>
+  </div>
+
 </div>
 
 <!-- CONTEXT -->
 <div class="section" id="context">
   <div class="page-header">
     <h1 class="page-title">Context API</h1>
-    <p class="page-sub">Share state anywhere in your component tree without passing props through every level. Think of it as a broadcast system — any component can tune in.</p>
+    <p class="page-sub">Context API is React's built-in solution for <strong>prop drilling</strong> — the problem of passing data through many layers of components just so a deeply nested component can access it. Context creates a "broadcast channel" at a high level in the tree; any descendant component can subscribe to it and read the value directly, skipping all the layers in between.</p>
   </div>
   <div class="card">
     <div class="card-title">When to use Context vs Props</div>
@@ -1162,6 +1523,30 @@ const Layout = () =&gt; {
       <tr><td>Global feature flags</td><td>Frequently changing values (use a state library)</td></tr>
     </table></div>
   </div>
+  <div class="card">
+    <div class="card-title">&#9656; Prop drilling — the problem Context solves</div>
+    <div class="card-desc"><strong>Prop drilling</strong> is passing data through multiple component layers just to get it to a deeply nested component that needs it. The middle components don&#8217;t use the data — they just pass it through.</div>
+    <pre>// PROP DRILLING — username has to pass through 3 components that don't need it
+const App = () => &lt;Layout username="Aj" /&gt;
+const Layout = ({ username }) => &lt;Sidebar username={username} /&gt;    // doesn't use it
+const Sidebar = ({ username }) => &lt;NavLinks username={username} /&gt;  // doesn't use it
+const NavLinks = ({ username }) => &lt;p&gt;Hi, {username}!&lt;/p&gt;           // finally uses it
+
+// WITH CONTEXT — NavLinks reads it directly, no drilling
+const App = () => (
+  &lt;UserContext.Provider value={{ username: 'Aj' }}&gt;
+    &lt;Layout /&gt;          {/* no props needed */}
+  &lt;/UserContext.Provider&gt;
+)
+const Layout  = () => &lt;Sidebar /&gt;                    // no prop passing
+const Sidebar = () => &lt;NavLinks /&gt;                   // no prop passing
+const NavLinks = () => {
+  const { username } = useContext(UserContext)        // reads directly
+  return &lt;p&gt;Hi, {username}!&lt;/p&gt;
+}</pre>
+    <div class="info">Prop drilling 2–3 levels deep is normal and fine. Context becomes useful when you&#8217;re drilling 4+ levels, or when many unrelated components need the same data.</div>
+  </div>
+
   <div class="card">
     <div class="card-title">Full auth context pattern</div>
     <pre>import { createContext, useContext, useState, useCallback } from 'react'
@@ -1215,6 +1600,84 @@ const NavBar = () =&gt; {
 }</pre>
   </div>
   <div class="card">
+    <div class="card-title">&#9656; Multiple contexts — split by concern</div>
+    <div class="card-desc">A common mistake is creating one giant <code>AppContext</code> with everything in it. When any value in a context changes, <strong>every</strong> component reading that context re-renders. Splitting into focused contexts gives better performance and cleaner code.</div>
+    <pre>// auth/AuthContext.jsx
+const AuthContext = createContext(null)
+export const AuthProvider = ({ children }) =&gt; { /* login/logout/user */ }
+export const useAuth = () =&gt; useContext(AuthContext)
+
+// theme/ThemeContext.jsx
+const ThemeContext = createContext('light')
+export const ThemeProvider = ({ children }) =&gt; { /* dark/light/system */ }
+export const useTheme = () =&gt; useContext(ThemeContext)
+
+// cart/CartContext.jsx
+const CartContext = createContext(null)
+export const CartProvider = ({ children }) =&gt; { /* items/add/remove */ }
+export const useCart = () =&gt; useContext(CartContext)
+
+// main.jsx — compose providers
+ReactDOM.createRoot(root).render(
+  &lt;AuthProvider&gt;
+    &lt;ThemeProvider&gt;
+      &lt;CartProvider&gt;
+        &lt;App /&gt;
+      &lt;/CartProvider&gt;
+    &lt;/ThemeProvider&gt;
+  &lt;/AuthProvider&gt;
+)
+
+// Or use a single Providers.jsx wrapper to keep main.jsx clean
+const Providers = ({ children }) =&gt; (
+  &lt;AuthProvider&gt;
+    &lt;ThemeProvider&gt;
+      &lt;CartProvider&gt;
+        {children}
+      &lt;/CartProvider&gt;
+    &lt;/ThemeProvider&gt;
+  &lt;/AuthProvider&gt;
+)</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Context performance — split state from actions</div>
+    <div class="card-desc">If you put state and functions in the same context value, every action call re-renders all consumers (even those that only need the function). Solution: use two separate contexts — one for reading state, one for dispatching actions.</div>
+    <pre>// High-performance context pattern — separate state from dispatch
+const CounterStateContext   = createContext(null)
+const CounterDispatchContext = createContext(null)
+
+const CounterProvider = ({ children }) =&gt; {
+  const [count, dispatch] = useReducer((s, a) =&gt; {
+    if (a === 'inc') return s + 1
+    if (a === 'dec') return s - 1
+    return s
+  }, 0)
+
+  return (
+    &lt;CounterStateContext.Provider value={count}&gt;
+      &lt;CounterDispatchContext.Provider value={dispatch}&gt;
+        {children}
+      &lt;/CounterDispatchContext.Provider&gt;
+    &lt;/CounterStateContext.Provider&gt;
+  )
+}
+
+// Components that only dispatch actions never re-render when count changes
+const IncrementButton = () =&gt; {
+  const dispatch = useContext(CounterDispatchContext)  // stable — never changes
+  return &lt;button onClick={() =&gt; dispatch('inc')}&gt;+&lt;/button&gt;
+}
+
+// Only this component re-renders when count changes
+const CountDisplay = () =&gt; {
+  const count = useContext(CounterStateContext)
+  return &lt;p&gt;Count: {count}&lt;/p&gt;
+}</pre>
+    <div class="tip">For high-performance global state, consider Zustand instead of Context. Zustand subscriptions are granular — a component only re-renders when the specific slice of state it reads changes.</div>
+  </div>
+
+  <div class="card">
     <div class="card-title">Context best practices</div>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Split by concern</strong><p>One context for auth, one for theme, one for cart. A single giant AppContext is a mess.</p></div></div>
@@ -1228,7 +1691,7 @@ const NavBar = () =&gt; {
 <div class="section" id="router">
   <div class="page-header">
     <h1 class="page-title">React Router v6</h1>
-    <p class="page-sub">React apps are single-page applications — React Router handles URL navigation without page reloads. Always use v6 — v5 is outdated.</p>
+    <p class="page-sub">React apps are <strong>Single Page Applications (SPAs)</strong> — there is only one HTML file, and React swaps components in and out to simulate multiple pages. React Router v6 maps URL paths to specific components, handles navigation history, and lets users bookmark and share deep links — all without the browser ever doing a full page reload. Always use v6 — v5 has a very different API and is no longer maintained.</p>
   </div>
   <div class="card">
     <div class="card-title">Install &amp; basic routes</div>
@@ -1306,6 +1769,65 @@ const DashboardLayout = () =&gt; (
 )</pre>
   </div>
   <div class="card">
+    <div class="card-title">&#9656; Lazy loading routes — split your bundle</div>
+    <div class="card-desc">Wrap each page with <code>lazy()</code> so its code is only downloaded when the user navigates to that route. This dramatically reduces initial load time.</div>
+    <pre>import { lazy, Suspense } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+// Each page is its own code chunk — downloaded on demand
+const Home      = lazy(() =&gt; import('./pages/Home'))
+const Dashboard = lazy(() =&gt; import('./pages/Dashboard'))
+const Profile   = lazy(() =&gt; import('./pages/Profile'))
+const Settings  = lazy(() =&gt; import('./pages/Settings'))
+
+const App = () =&gt; (
+  &lt;BrowserRouter&gt;
+    &lt;Suspense fallback={&lt;div className="page-loading"&gt;Loading...&lt;/div&gt;}&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/"          element={&lt;Home /&gt;} /&gt;
+        &lt;Route path="/dashboard" element={&lt;Dashboard /&gt;} /&gt;
+        &lt;Route path="/profile"   element={&lt;Profile /&gt;} /&gt;
+        &lt;Route path="/settings"  element={&lt;Settings /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/Suspense&gt;
+  &lt;/BrowserRouter&gt;
+)</pre>
+    <div class="good">Splitting at the route level is the single highest-impact performance optimisation for most React apps. Do it from the start.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Error boundaries in routes</div>
+    <pre>import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ErrorBoundary } from 'react-error-boundary'
+
+const RouteError = ({ error, resetErrorBoundary }) =&gt; (
+  &lt;div className="error-page"&gt;
+    &lt;h1&gt;Something went wrong&lt;/h1&gt;
+    &lt;p&gt;{error.message}&lt;/p&gt;
+    &lt;button onClick={resetErrorBoundary}&gt;Try again&lt;/button&gt;
+    &lt;a href="/"&gt;Go home&lt;/a&gt;
+  &lt;/div&gt;
+)
+
+// Wrap each route in an error boundary for isolated error handling
+const App = () =&gt; (
+  &lt;BrowserRouter&gt;
+    &lt;Routes&gt;
+      &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+      &lt;Route
+        path="/dashboard"
+        element={
+          &lt;ErrorBoundary FallbackComponent={RouteError}&gt;
+            &lt;Dashboard /&gt;
+          &lt;/ErrorBoundary&gt;
+        }
+      /&gt;
+    &lt;/Routes&gt;
+  &lt;/BrowserRouter&gt;
+)</pre>
+  </div>
+
+  <div class="card">
     <div class="card-title">Protected routes</div>
     <pre>const RequireAuth = ({ children }) =&gt; {
   const { user } = useAuth()
@@ -1331,7 +1853,7 @@ navigate(dest, { replace: true })</pre>
 <div class="section" id="forms">
   <div class="page-header">
     <h1 class="page-title">Forms</h1>
-    <p class="page-sub">Forms are in almost every app. React gives you full control. For complex forms, use React Hook Form — it's the current industry standard.</p>
+    <p class="page-sub">In React, form inputs can be <strong>controlled</strong> (React owns the value via state — the recommended approach) or <strong>uncontrolled</strong> (the DOM owns the value via a ref). Controlled inputs give you full control: instant validation, conditional UI, and format-as-you-type. For complex forms with many fields and validation rules, React Hook Form dramatically reduces boilerplate.</p>
   </div>
   <div class="card">
     <div class="card-title">Controlled inputs with validation</div>
@@ -1398,6 +1920,82 @@ const SignupForm = () =&gt; {
 &lt;textarea value={bio} onChange={e =&gt; setBio(e.target.value)} rows={4} /&gt;</pre>
   </div>
   <div class="card">
+    <div class="card-title">&#9656; Accessible forms (a11y) — labels, ARIA &amp; screen readers</div>
+    <div class="card-desc"><strong>Accessibility (a11y)</strong> means your app works for users relying on screen readers, keyboard-only navigation, and other assistive tech. Unlabelled inputs are invisible to screen readers. This is both a legal requirement in many countries and the right thing to do.</div>
+    <pre>// WRONG — screen reader announces "edit text" with no context
+&lt;input type="email" placeholder="Email" /&gt;
+
+// CORRECT — label linked to input via htmlFor/id pair
+&lt;label htmlFor="email-input"&gt;Email address&lt;/label&gt;
+&lt;input id="email-input" type="email" autoComplete="email" required /&gt;
+
+// CORRECT — aria-label for inputs with no visible label (icon buttons, search)
+&lt;input type="search" aria-label="Search products" /&gt;
+&lt;button aria-label="Close dialog"&gt;&times;&lt;/button&gt;
+
+// Error messages — link to input with aria-describedby
+&lt;label htmlFor="pwd"&gt;Password&lt;/label&gt;
+&lt;input
+  id="pwd"
+  type="password"
+  aria-describedby="pwd-error"
+  aria-invalid={!!errors.password}
+/&gt;
+{errors.password &amp;&amp; (
+  &lt;p id="pwd-error" role="alert"&gt;{errors.password}&lt;/p&gt;
+  // role="alert" — screen reader announces this immediately when it appears
+)}
+
+// Focus management — move focus when modal opens
+const Modal = ({ isOpen }) => {
+  const closeBtnRef = useRef()
+  useEffect(() => {
+    if (isOpen) closeBtnRef.current?.focus()  // focus close button on open
+  }, [isOpen])
+  return isOpen
+    ? &lt;div role="dialog" aria-modal="true" aria-label="Settings"&gt;
+        &lt;button ref={closeBtnRef} onClick={close}&gt;Close&lt;/button&gt;
+      &lt;/div&gt;
+    : null
+}</pre>
+    <div class="good">Install the <strong>axe DevTools</strong> browser extension — it scans your page and highlights every accessibility violation with a clear explanation and fix. Run it before every release.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; File upload — always uncontrolled</div>
+    <pre>import { useRef, useState } from 'react'
+
+const FileUpload = () => {
+  const fileRef = useRef()
+  const [preview, setPreview] = useState(null)
+
+  const handleChange = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    if (!file.type.startsWith('image/'))     { alert('Images only'); return }
+    if (file.size > 5 * 1024 * 1024)        { alert('Max 5MB'); return }
+    setPreview(URL.createObjectURL(file))
+  }
+
+  const handleUpload = async () => {
+    const file = fileRef.current.files[0]
+    if (!file) return
+    const formData = new FormData()
+    formData.append('photo', file)
+    await fetch('/api/upload', { method: 'POST', body: formData })
+  }
+
+  return (
+    &lt;div&gt;
+      {preview &amp;&amp; &lt;img src={preview} alt="Preview" style={{ width: 100 }} /&gt;}
+      &lt;input ref={fileRef} type="file" accept="image/*" onChange={handleChange} /&gt;
+      &lt;button onClick={handleUpload}&gt;Upload&lt;/button&gt;
+    &lt;/div&gt;
+  )
+}</pre>
+  </div>
+
+  <div class="card">
     <div class="card-title">React Hook Form + Zod — industry standard for complex forms</div>
     <pre>npm install react-hook-form zod @hookform/resolvers</pre>
     <pre>import { useForm } from 'react-hook-form'
@@ -1450,7 +2048,7 @@ const SignupForm = () =&gt; {
 <div class="section" id="styling">
   <div class="page-header">
     <h1 class="page-title">Styling</h1>
-    <p class="page-sub">No single right answer. Pick the approach that fits your project, pick it early, and stay consistent throughout.</p>
+    <p class="page-sub">React has no built-in styling system — it's just JavaScript, so you can use any approach. The challenge is <strong>scope</strong> (keeping styles from accidentally affecting other components) and <strong>dynamics</strong> (applying styles based on props or state). There are five main approaches, each with different trade-offs.</p>
   </div>
   <div class="card">
     <div class="card-title">Comparison</div>
@@ -1515,6 +2113,100 @@ const cn = (...inputs) =&gt; twMerge(clsx(inputs))
 &lt;div className={clsx(styles.base, { [styles.active]: isActive, [styles.error]: hasError })}&gt;</pre>
     <div class="tip">The <code>cn()</code> utility pattern is extremely common in the React ecosystem. Learn it early — you'll see it in almost every production codebase.</div>
   </div>
+  <div class="card">
+    <div class="card-title">&#9656; CSS Variables with React — dynamic theming</div>
+    <div class="card-desc">CSS custom properties (variables) are the cleanest way to implement theming. Set them on the root element from React and every element in the tree inherits them.</div>
+    <pre>// ThemeProvider.jsx
+const ThemeProvider = ({ children }) =&gt; {
+  const [theme, setTheme] = useState('dark')
+
+  useEffect(() =&gt; {
+    const root = document.documentElement
+    if (theme === 'dark') {
+      root.style.setProperty('--bg',      '#0f1117')
+      root.style.setProperty('--surface', '#161b27')
+      root.style.setProperty('--text',    '#e8eaf0')
+    } else {
+      root.style.setProperty('--bg',      '#ffffff')
+      root.style.setProperty('--surface', '#f5f5f5')
+      root.style.setProperty('--text',    '#1a1a18')
+    }
+  }, [theme])
+
+  return (
+    &lt;ThemeContext.Provider value={{ theme, setTheme }}&gt;
+      {children}
+    &lt;/ThemeContext.Provider&gt;
+  )
+}
+
+/* index.css — use the variables everywhere */
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+.card {
+  background: var(--surface);
+}</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Animations in React</div>
+    <div class="card-desc">CSS transitions work great for simple show/hide. For complex animations, use <strong>Framer Motion</strong>.</div>
+    <pre>/* CSS approach — simple fade in/out */
+.modal-overlay {
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+.modal-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+// React — toggle the class
+const Modal = ({ isOpen }) =&gt; (
+  &lt;div className={`modal-overlay ${isOpen ? 'visible' : ''}`}&gt;
+    Content
+  &lt;/div&gt;
+)</pre>
+    <pre>// Framer Motion — production-ready animations
+// npm install framer-motion
+import { motion, AnimatePresence } from 'framer-motion'
+
+const AnimatedModal = ({ isOpen, children }) =&gt; (
+  &lt;AnimatePresence&gt;
+    {isOpen &amp;&amp; (
+      &lt;motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{    opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.2 }}
+      &gt;
+        {children}
+      &lt;/motion.div&gt;
+    )}
+  &lt;/AnimatePresence&gt;
+)
+
+// List item animations
+const List = ({ items }) =&gt; (
+  &lt;ul&gt;
+    {items.map((item, i) =&gt; (
+      &lt;motion.li
+        key={item.id}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{    opacity: 0, x:  20 }}
+        transition={{ delay: i * 0.05 }}
+      &gt;
+        {item.name}
+      &lt;/motion.li&gt;
+    ))}
+  &lt;/ul&gt;
+)</pre>
+  </div>
+
 </div>
 
 <!-- API & DATA -->
@@ -1595,50 +2287,277 @@ export const userService = {
 }</pre>
   </div>
   <div class="card">
-    <div class="card-title">TanStack Query v5 — professional server state</div>
-    <div class="card-desc">Handles caching, background refetching, retries, loading/error states automatically. The most important library in the React ecosystem after React itself.</div>
-    <pre>npm install @tanstack/react-query</pre>
-    <pre>// main.jsx — wrap your app once
+    <div class="card-title">&#9656; AbortController — cancel fetch requests on cleanup</div>
+    <div class="card-desc">When a component unmounts while a fetch is still running, React tries to update state that no longer exists. <strong>AbortController</strong> lets you cancel in-flight requests in the useEffect cleanup function.</div>
+    <pre>// WITHOUT cleanup — causes React warning and potential bugs
+useEffect(() => {
+  fetch('/api/users')
+    .then(r => r.json())
+    .then(data => setUsers(data))  // may run after component unmounts!
+}, [])
+
+// WITH AbortController — cancels the request on unmount
+useEffect(() => {
+  const controller = new AbortController()
+
+  const load = async () => {
+    try {
+      const res  = await fetch(`/api/users/${userId}`, {
+        signal: controller.signal   // attach the abort signal
+      })
+      const data = await res.json()
+      setUsers(data)
+    } catch (err) {
+      if (err.name === 'AbortError') return   // cancelled — not a real error, ignore
+      setError(err.message)
+    }
+  }
+
+  load()
+  return () => controller.abort()  // cancel if userId changes or component unmounts
+}, [userId])
+
+// With axios — pass signal in config
+useEffect(() => {
+  const controller = new AbortController()
+  api.get('/api/users', { signal: controller.signal })
+    .then(r => setUsers(r.data))
+    .catch(err => { if (!axios.isCancel(err)) setError(err.message) })
+  return () => controller.abort()
+}, [])</pre>
+    <div class="good">TanStack Query handles cancellation automatically. This is one of the main reasons to use it over manual useEffect fetching.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Axios interceptors — handle auth &amp; errors globally</div>
+    <div class="card-desc"><strong>Interceptors</strong> are functions that run automatically before every request or after every response. Use them to attach auth tokens and handle common errors (like 401 Unauthorized) in one place instead of in every API call.</div>
+    <pre>// services/api.js — set this up once at app startup
+import axios from 'axios'
+
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  timeout: 10000,
+})
+
+// REQUEST interceptor — runs before every request leaves
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('accessToken')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config       // must return the config
+  },
+  (error) => Promise.reject(error)
+)
+
+// RESPONSE interceptor — runs after every response arrives
+api.interceptors.response.use(
+  (response) => response,   // success — pass through unchanged
+
+  async (error) => {
+    const originalRequest = error.config
+
+    // Token expired (401) — try to refresh it automatically
+    if (error.response?.status === 401 && !originalRequest._retried) {
+      originalRequest._retried = true       // prevent infinite loop
+      try {
+        const { data } = await axios.post('/api/auth/refresh')
+        localStorage.setItem('accessToken', data.accessToken)
+        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`
+        return api(originalRequest)         // retry the original request
+      } catch {
+        localStorage.removeItem('accessToken')
+        window.location.href = '/login'     // refresh failed — force login
+      }
+    }
+
+    // 403 — permission denied
+    if (error.response?.status === 403) {
+      console.error('Permission denied')
+    }
+
+    // 500 — server error — show toast
+    if (error.response?.status >= 500) {
+      showToast('Server error — please try again')
+    }
+
+    return Promise.reject(error)
+  }
+)</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">TanStack Query v5 (React Query) &#8212; server state management</div>
+    <div class="card-desc"><strong>What it is:</strong> TanStack Query is a library that manages <em>server state</em> &#8212; data that lives on a remote server and needs to be fetched, cached, and kept in sync with your UI. It completely replaces the manual <code>useEffect + useState + loading + error</code> pattern.<br><br><strong>The core idea:</strong> You tell it <em>what</em> to fetch (a function) and <em>when</em> to consider data stale. It handles everything else &#8212; caching, background refetching, retries, deduplication across components, and window-focus refetching.</div>
+    <div class="table-wrap"><table>
+      <tr><th>Concept</th><th>What it means</th></tr>
+      <tr><td><strong>queryKey</strong></td><td>A unique array identifying this query. Same key = shared cache. <code>['posts']</code>, <code>['post', 5]</code>, <code>['posts', { status: 'published' }]</code></td></tr>
+      <tr><td><strong>queryFn</strong></td><td>The async function that fetches data. Must return a promise that resolves with the data.</td></tr>
+      <tr><td><strong>staleTime</strong></td><td>How long (ms) cached data is considered fresh. No refetch during this window. Default: 0 (always stale).</td></tr>
+      <tr><td><strong>gcTime</strong></td><td>How long unused cache stays in memory before garbage collection. Default: 5 minutes.</td></tr>
+      <tr><td><strong>isLoading</strong></td><td>True only on first fetch with no cached data. Show a full loading screen.</td></tr>
+      <tr><td><strong>isFetching</strong></td><td>True whenever a request is in-flight, including background refreshes. Show a subtle indicator.</td></tr>
+      <tr><td><strong>invalidateQueries</strong></td><td>Marks cached data as stale and triggers a background refetch on next access.</td></tr>
+      <tr><td><strong>setQueryData</strong></td><td>Manually update the cache &#8212; instant UI update without a round-trip to the server.</td></tr>
+    </table></div>
+    <pre>npm install @tanstack/react-query
+npm install -D @tanstack/react-query-devtools  # optional but highly recommended</pre>
+    <pre>// main.jsx &#8212; configure and wrap your app once
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 1000 * 60 * 5, retry: 2 } }
+  defaultOptions: {
+    queries: {
+      staleTime:          1000 * 60 * 5,  // data fresh for 5 mins
+      gcTime:             1000 * 60 * 10, // keep unused cache 10 mins
+      retry:              2,              // retry failed requests twice
+      refetchOnWindowFocus: true,         // refetch when user returns to tab
+    },
+  },
 })
-// &lt;QueryClientProvider client={queryClient}&gt;&lt;App /&gt;&lt;/QueryClientProvider&gt;</pre>
-    <pre>// Read data with useQuery
+
+ReactDOM.createRoot(root).render(
+  &lt;QueryClientProvider client={queryClient}&gt;
+    &lt;App /&gt;
+    &lt;ReactQueryDevtools initialIsOpen={false} /&gt;
+  &lt;/QueryClientProvider&gt;
+)</pre>
+    <pre>// &#8212; Real-world example: Blog Post Manager &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;
+
+// services/postService.js
+export const postService = {
+  getAll:  ()         =&gt; api.get('/posts').then(r =&gt; r.data),
+  getById: (id)       =&gt; api.get(`/posts/${id}`).then(r =&gt; r.data),
+  create:  (data)     =&gt; api.post('/posts', data).then(r =&gt; r.data),
+  update:  (id, data) =&gt; api.put(`/posts/${id}`, data).then(r =&gt; r.data),
+  remove:  (id)       =&gt; api.delete(`/posts/${id}`),
+}</pre>
+    <pre>// PostList.jsx &#8212; READ all posts (useQuery)
 import { useQuery } from '@tanstack/react-query'
 
-const UserList = () =&gt; {
-  const { data: users, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ['users'],           // unique cache key
-    queryFn: userService.getAll,   // async function that returns data
+const PostList = () =&gt; {
+  const {
+    data: posts,    // the data (undefined while first loading)
+    isLoading,      // true on first load with no cache
+    isFetching,     // true on any background refresh
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ['posts'],
+    queryFn:  postService.getAll,
+    staleTime: 1000 * 60 * 2,   // override: stale after 2 mins
   })
 
-  if (isLoading) return &lt;Spinner /&gt;
-  if (isError)   return &lt;Error message={error.message} onRetry={refetch} /&gt;
-  return &lt;ul&gt;{users.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;
+  if (isLoading) return &lt;p&gt;Loading posts...&lt;/p&gt;
+  if (isError)   return &lt;p&gt;Error: {error.message}&lt;/p&gt;
+
+  return (
+    &lt;div&gt;
+      {isFetching &amp;&amp; &lt;small&gt;Refreshing...&lt;/small&gt;}
+      &lt;button onClick={() =&gt; refetch()}&gt;Refresh&lt;/button&gt;
+      {posts.map(post =&gt; (
+        &lt;div key={post.id}&gt;
+          &lt;h2&gt;{post.title}&lt;/h2&gt;
+          &lt;p&gt;{post.body}&lt;/p&gt;
+        &lt;/div&gt;
+      ))}
+    &lt;/div&gt;
+  )
+}
+
+// PostDetail.jsx &#8212; READ one post (dynamic key, enabled guard)
+const PostDetail = ({ postId }) =&gt; {
+  const { data: post, isLoading } = useQuery({
+    queryKey: ['post', postId],              // new query per postId
+    queryFn:  () =&gt; postService.getById(postId),
+    enabled:  !!postId,                     // don't fetch if postId is null
+  })
+
+  if (isLoading) return &lt;p&gt;Loading...&lt;/p&gt;
+  return &lt;article&gt;&lt;h1&gt;{post?.title}&lt;/h1&gt;&lt;p&gt;{post?.body}&lt;/p&gt;&lt;/article&gt;
 }</pre>
-    <pre>// Mutate data with useMutation
+    <pre>// CreatePost.jsx &#8212; CREATE (useMutation + POST)
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-const AddUser = () =&gt; {
+const CreatePost = () =&gt; {
   const queryClient = useQueryClient()
-  const { mutate, isPending } = useMutation({
-    mutationFn: userService.create,
-    onSuccess: () =&gt; {
-      queryClient.invalidateQueries({ queryKey: ['users'] })  // refresh list
+  const [form, setForm] = useState({ title: '', body: '' })
+
+  const { mutate: createPost, isPending, isError, error, isSuccess } = useMutation({
+    mutationFn: postService.create,
+
+    onSuccess: (newPost) =&gt; {
+      // Option A: invalidate &#8212; triggers background refetch of posts list
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
+
+      // Option B: update cache directly &#8212; instant, no round-trip
+      // queryClient.setQueryData(['posts'], (old) =&gt; [newPost, ...old])
+
+      setForm({ title: '', body: '' })  // reset form
     },
-    onError: (err) =&gt; toast.error(err.message),
+    onError: (err) =&gt; console.error('Create failed:', err.message),
   })
 
   return (
-    &lt;button onClick={() =&gt; mutate({ name: 'New User' })} disabled={isPending}&gt;
-      {isPending ? 'Adding...' : 'Add User'}
+    &lt;form onSubmit={(e) =&gt; { e.preventDefault(); createPost(form) }}&gt;
+      &lt;input  value={form.title} onChange={e =&gt; setForm(p =&gt; ({ ...p, title: e.target.value }))} placeholder="Title" /&gt;
+      &lt;textarea value={form.body}  onChange={e =&gt; setForm(p =&gt; ({ ...p, body:  e.target.value }))} placeholder="Body" /&gt;
+      &lt;button type="submit" disabled={isPending}&gt;{isPending ? 'Publishing...' : 'Publish'}&lt;/button&gt;
+      {isError   &amp;&amp; &lt;p&gt;Error: {error.message}&lt;/p&gt;}
+      {isSuccess &amp;&amp; &lt;p&gt;Published!&lt;/p&gt;}
+    &lt;/form&gt;
+  )
+}</pre>
+    <pre>// EditPost.jsx &#8212; UPDATE (useMutation + PUT)
+const EditPost = ({ post }) =&gt; {
+  const queryClient = useQueryClient()
+  const [title, setTitle] = useState(post.title)
+
+  const { mutate: updatePost, isPending } = useMutation({
+    mutationFn: (data) =&gt; postService.update(post.id, data),
+    onSuccess: (updated) =&gt; {
+      queryClient.invalidateQueries({ queryKey: ['posts'] })       // refresh list
+      queryClient.setQueryData(['post', post.id], updated)         // update detail cache
+    },
+  })
+
+  return (
+    &lt;div&gt;
+      &lt;input value={title} onChange={e =&gt; setTitle(e.target.value)} /&gt;
+      &lt;button onClick={() =&gt; updatePost({ title })} disabled={isPending}&gt;
+        {isPending ? 'Saving...' : 'Save Changes'}
+      &lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+
+// DeletePost.jsx &#8212; DELETE (useMutation + DELETE)
+const DeletePost = ({ postId }) =&gt; {
+  const queryClient = useQueryClient()
+
+  const { mutate: deletePost, isPending } = useMutation({
+    mutationFn: () =&gt; postService.remove(postId),
+    onSuccess: () =&gt; {
+      // Remove from list immediately
+      queryClient.setQueryData(['posts'], (old) =&gt; old?.filter(p =&gt; p.id !== postId))
+      // Clean up individual post cache
+      queryClient.removeQueries({ queryKey: ['post', postId] })
+    },
+  })
+
+  return (
+    &lt;button onClick={() =&gt; deletePost()} disabled={isPending}&gt;
+      {isPending ? 'Deleting...' : 'Delete'}
     &lt;/button&gt;
   )
 }</pre>
-    <div class="good">TanStack Query v5 is the current version. Key change from v4: use <code>isPending</code> (not <code>isLoading</code>) for mutations.</div>
+    <div class="good">TanStack Query v5 is the current version. Key change from v4: mutations use <code>isPending</code>, not <code>isLoading</code>. Install ReactQueryDevtools &#8212; it shows your live cache in a floating panel during development.</div>
+    <div class="tip"><strong>isLoading vs isFetching:</strong> <code>isLoading</code> is true only on the very first fetch with no cache. <code>isFetching</code> is true whenever any request is in-flight (including background refreshes). Show a full spinner for <code>isLoading</code>, a subtle badge for <code>isFetching</code>.</div>
   </div>
+
   <div class="card">
     <div class="card-title">HTTP methods at a glance</div>
     <div class="table-wrap"><table>
@@ -1656,7 +2575,7 @@ const AddUser = () =&gt; {
 <div class="section" id="performance">
   <div class="page-header">
     <h1 class="page-title">Performance</h1>
-    <p class="page-sub">React is fast by default. Profile before optimising. Premature optimisation adds complexity without measurable benefit.</p>
+    <p class="page-sub">React re-renders a component whenever its state or props change. For most apps, this is fast enough to never notice. Performance becomes an issue only when: (1) a component renders very frequently, (2) it does expensive work during render, or (3) it renders a huge number of items at once. <strong>Always profile first</strong> with React DevTools Profiler — fix what you can measure, not what you guess.</p>
   </div>
   <div class="card">
     <div class="card-title">React.memo — skip re-rendering when props haven't changed</div>
@@ -1708,6 +2627,91 @@ const App = () =&gt; (
 )</pre>
   </div>
   <div class="card">
+    <div class="card-title">&#9656; Virtualising long lists — only render what&#8217;s visible</div>
+    <div class="card-desc">Rendering 1000+ rows in the DOM is slow — even if they&#8217;re off-screen. Virtualisation renders only the items currently visible in the viewport, making even 100,000-row lists fast.</div>
+    <pre>npm install @tanstack/react-virtual</pre>
+    <pre>import { useVirtualizer } from '@tanstack/react-virtual'
+import { useRef } from 'react'
+
+const VirtualList = ({ items }) =&gt; {
+  const parentRef = useRef()
+
+  const virtualizer = useVirtualizer({
+    count:         items.length,      // total number of items
+    getScrollElement: () =&gt; parentRef.current,
+    estimateSize:  () =&gt; 50,          // estimated row height in px
+    overscan:      5,                 // render 5 extra items above/below viewport
+  })
+
+  return (
+    &lt;div
+      ref={parentRef}
+      style={{ height: '600px', overflow: 'auto' }}
+    &gt;
+      {/* Total scrollable height — creates correct scrollbar */}
+      &lt;div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}&gt;
+        {virtualizer.getVirtualItems().map((vItem) =&gt; (
+          &lt;div
+            key={vItem.key}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: `${vItem.size}px`,
+              transform: `translateY(${vItem.start}px)`,
+            }}
+          &gt;
+            {items[vItem.index].name}
+          &lt;/div&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}</pre>
+    <div class="tip">Use virtualisation for lists with 100+ items. Under 100 items, the DOM handles it fine without any library.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; When does React re-render? — the complete picture</div>
+    <div class="card-desc">Understanding exactly when React re-renders prevents unnecessary optimisation and helps you find real bottlenecks.</div>
+    <div class="table-wrap"><table>
+      <tr><th>Trigger</th><th>What re-renders</th></tr>
+      <tr><td><code>setState()</code> called</td><td>The component that owns the state + all its descendants</td></tr>
+      <tr><td>Parent re-renders</td><td>All children, unless wrapped in <code>memo()</code></td></tr>
+      <tr><td>Context value changes</td><td>All components consuming that context</td></tr>
+      <tr><td>Props change</td><td>The receiving component (same as parent re-render)</td></tr>
+    </table></div>
+    <pre>// What DOES and DOESN'T cause a re-render
+const Parent = () =&gt; {
+  const [count, setCount] = useState(0)
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;+&lt;/button&gt;
+
+      {/* RE-RENDERS every time Parent re-renders */}
+      &lt;RegularChild /&gt;
+
+      {/* SKIPS re-render if props haven't changed */}
+      &lt;MemoizedChild value="stable" /&gt;
+
+      {/* RE-RENDERS because new object created every render */}
+      &lt;MemoizedChild config={{ key: 'value' }} /&gt;
+
+      {/* SKIPS re-render because object is stable (from useMemo) */}
+      &lt;MemoizedChild config={stableConfig} /&gt;
+    &lt;/div&gt;
+  )
+}
+
+const MemoizedChild = memo(({ value, config }) =&gt; {
+  console.log('MemoizedChild rendered')
+  return &lt;p&gt;{value}&lt;/p&gt;
+})</pre>
+  </div>
+
+  <div class="card">
     <div class="card-title">Performance checklist</div>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Profile first</strong><p>Use React DevTools Profiler to find what's actually slow before touching anything.</p></div></div>
@@ -1724,7 +2728,7 @@ const App = () =&gt; (
 <div class="section" id="patterns">
   <div class="page-header">
     <h1 class="page-title">Patterns</h1>
-    <p class="page-sub">Proven solutions to common React design problems. Knowing these sets you apart from developers who only know the basics.</p>
+    <p class="page-sub">Design patterns are proven, reusable solutions to recurring problems in software design. In React, patterns emerge from the constraints of component composition — how to share logic, expose flexible APIs, render into different DOM locations, and let parent components control child behaviour. These are the patterns you'll encounter in production codebases.</p>
   </div>
   <div class="card">
     <div class="card-title">Compound components — flexible component APIs</div>
@@ -1771,6 +2775,67 @@ const Form = () =&gt; {
 }</pre>
   </div>
   <div class="card">
+    <div class="card-title">&#9656; Render Props — share logic through a function prop</div>
+    <div class="card-desc">A <strong>render prop</strong> is a prop whose value is a function that returns JSX. The parent component calls your function with data, giving you control over rendering while it handles the logic. Mostly replaced by custom hooks today, but still found in libraries.</div>
+    <pre>const MouseTracker = ({ render }) =&gt; {
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+  return (
+    &lt;div onMouseMove={(e) =&gt; setPos({ x: e.clientX, y: e.clientY })}&gt;
+      {render(pos)}
+    &lt;/div&gt;
+  )
+}
+
+&lt;MouseTracker render={({ x, y }) =&gt; &lt;p&gt;Mouse: {x}, {y}&lt;/p&gt;} /&gt;</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Higher-Order Components (HOC) — wrap and enhance a component</div>
+    <div class="card-desc">A HOC is a function that takes a component and returns a new enhanced version. Used in libraries like Redux <code>connect()</code>. Custom hooks have replaced most HOC use cases.</div>
+    <pre>// withAuth HOC — redirects unauthenticated users
+const withAuth = (WrappedComponent) =&gt; {
+  return function AuthenticatedComponent(props) {
+    const { user } = useAuth()
+    if (!user) return &lt;Navigate to="/login" replace /&gt;
+    return &lt;WrappedComponent {...props} user={user} /&gt;
+  }
+}
+
+// Usage — wrap any component
+const ProtectedDashboard = withAuth(Dashboard)
+
+// withLoading HOC — adds a loading state
+const withLoading = (Component) =&gt; ({ isLoading, ...props }) =&gt;
+  isLoading ? &lt;p&gt;Loading...&lt;/p&gt; : &lt;Component {...props} /&gt;
+
+const UserListWithLoading = withLoading(UserList)
+&lt;UserListWithLoading isLoading={fetching} users={data} /&gt;</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Controlled vs Uncontrolled inputs</div>
+    <div class="table-wrap"><table>
+      <tr><th></th><th>Controlled</th><th>Uncontrolled</th></tr>
+      <tr><td><strong>Value owned by</strong></td><td>React state</td><td>The DOM</td></tr>
+      <tr><td><strong>Read value</strong></td><td>From state variable</td><td>From <code>ref.current.value</code></td></tr>
+      <tr><td><strong>Validation</strong></td><td>Real-time on every keystroke</td><td>Only on submit</td></tr>
+      <tr><td><strong>Use for</strong></td><td>Almost everything</td><td>File inputs, third-party integrations</td></tr>
+    </table></div>
+    <pre>// Controlled (recommended)
+const [email, setEmail] = useState('')
+&lt;input value={email} onChange={e =&gt; setEmail(e.target.value)} /&gt;
+
+// Uncontrolled (use ref)
+const inputRef = useRef()
+&lt;input ref={inputRef} defaultValue="initial" /&gt;
+&lt;button onClick={() =&gt; console.log(inputRef.current.value)}&gt;Read&lt;/button&gt;
+
+// File input — always uncontrolled (browser controls it)
+const fileRef = useRef()
+&lt;input type="file" ref={fileRef} /&gt;</pre>
+  </div>
+
+  <div class="card">
     <div class="card-title">Portal — render outside the component tree</div>
     <pre>import { createPortal } from 'react-dom'
 
@@ -1799,7 +2864,7 @@ const Modal = ({ isOpen, onClose, children }) =&gt; {
 <div class="section" id="typescript">
   <div class="page-header">
     <h1 class="page-title">TypeScript with React</h1>
-    <p class="page-sub">TypeScript catches bugs while you write code, not when users run it. It's expected in most React jobs in 2025.</p>
+    <p class="page-sub">TypeScript is a superset of JavaScript that adds <strong>static types</strong>. Instead of finding out at runtime that you passed a number where a string was expected, TypeScript tells you immediately in your editor with a red underline. It makes large codebases much safer to refactor, makes autocomplete dramatically more helpful, and is now expected in most professional React roles.</p>
   </div>
   <div class="card">
     <div class="card-title">Start a TypeScript project</div>
@@ -1885,6 +2950,125 @@ const fetchPost = async (id: number): Promise&lt;Post&gt; =&gt; {
 }</pre>
   </div>
   <div class="card">
+    <div class="card-title">&#9656; interface vs type — when to use which</div>
+    <div class="card-desc">This is one of the most common TypeScript questions. The short answer: use <code>interface</code> for objects and component props. Use <code>type</code> for unions, intersections, and utility types. They can do most of the same things, so pick one convention and stay consistent.</div>
+    <div class="table-wrap"><table>
+      <tr><th>Feature</th><th>interface</th><th>type</th></tr>
+      <tr><td>Object shape</td><td>✓ Primary use</td><td>✓ Works too</td></tr>
+      <tr><td>Union types</td><td>✗ Cannot do this</td><td>✓ <code>type X = A | B</code></td></tr>
+      <tr><td>Intersection</td><td>✓ <code>extends</code></td><td>✓ <code>type X = A &amp; B</code></td></tr>
+      <tr><td>Extending</td><td>✓ <code>interface B extends A</code></td><td>✓ <code>type B = A &amp; { ... }</code></td></tr>
+      <tr><td>Declaration merging</td><td>✓ Can be declared twice (auto-merged)</td><td>✗ Error if declared twice</td></tr>
+      <tr><td>Mapped types</td><td>✗ Cannot do this</td><td>✓ <code>type Keys = { [K in keyof T]: ... }</code></td></tr>
+    </table></div>
+    <pre>// interface — best for object shapes and props
+interface User {
+  id:    number
+  name:  string
+  email: string
+}
+
+interface Admin extends User {
+  permissions: string[]   // extends adds properties
+}
+
+// type — best for unions, primitives, tuples, mapped types
+type Status   = 'idle' | 'loading' | 'success' | 'error'  // union
+type Nullable&lt;T&gt; = T | null                                 // generic utility
+type Point    = [number, number]                            // tuple
+
+// Intersection — combine two types
+type AdminUser = User & { role: 'admin'; permissions: string[] }
+
+// Convention used in this guide (and most React codebases):
+// interface  → component props, object shapes, class contracts
+// type       → unions, utilities, derived types, anything interface can't do</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Generic types &amp; typing custom hooks</div>
+    <div class="card-desc">When you write custom hooks, TypeScript can infer return types automatically — but being explicit makes them easier to use and understand.</div>
+    <pre>// useFetch with generics — works with any data shape
+const useFetch = &lt;T&gt;(url: string) =&gt; {
+  const [data, setData]       = useState&lt;T | null&gt;(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError]     = useState&lt;string | null&gt;(null)
+
+  useEffect(() =&gt; {
+    fetch(url)
+      .then(r =&gt; r.json() as Promise&lt;T&gt;)
+      .then(data =&gt; { setData(data); setLoading(false) })
+      .catch(err =&gt;  { setError(err.message); setLoading(false) })
+  }, [url])
+
+  return { data, loading, error }
+}
+
+// Usage — TypeScript knows the shape of data
+interface User { id: number; name: string; email: string }
+const { data: user } = useFetch&lt;User&gt;('/api/user/1')
+// data is typed as User | null — autocomplete works on user?.name etc.
+
+const { data: users } = useFetch&lt;User[]&gt;('/api/users')
+// data is typed as User[] | null
+
+// Typing a generic component
+interface ListProps&lt;T&gt; {
+  items:      T[]
+  renderItem: (item: T) =&gt; React.ReactNode
+  keyExtractor: (item: T) =&gt; string
+}
+
+function List&lt;T&gt;({ items, renderItem, keyExtractor }: ListProps&lt;T&gt;) {
+  return (
+    &lt;ul&gt;
+      {items.map(item =&gt; (
+        &lt;li key={keyExtractor(item)}&gt;{renderItem(item)}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  )
+}
+
+// Usage — TypeScript infers T from the items prop
+&lt;List
+  items={users}
+  keyExtractor={(u) =&gt; u.id.toString()}
+  renderItem={(u) =&gt; &lt;span&gt;{u.name}&lt;/span&gt;}
+/&gt;</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Common TypeScript errors &amp; how to fix them</div>
+    <div class="table-wrap"><table>
+      <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+      <tr><td><code>Object is possibly 'null'</code></td><td>Value can be null</td><td>Use <code>?.</code> optional chaining or add a null check</td></tr>
+      <tr><td><code>Property does not exist on type</code></td><td>Accessing a prop not in the interface</td><td>Add the prop to the interface or use type assertion</td></tr>
+      <tr><td><code>Type 'string' is not assignable to type 'number'</code></td><td>Wrong type passed</td><td>Fix the data or use <code>Number(value)</code> to convert</td></tr>
+      <tr><td><code>Cannot find module</code></td><td>Missing type definitions</td><td>Install <code>@types/package-name</code></td></tr>
+      <tr><td><code>Argument of type ... is not assignable</code></td><td>Function receives wrong type</td><td>Check what the function expects and match it</td></tr>
+    </table></div>
+    <pre>// Optional chaining — safe access on potentially null values
+const name = user?.profile?.name ?? 'Anonymous'
+//                ^           ^      ^
+//           null-safe      null-safe  fallback if null
+
+// Type assertion — tell TS you know better (use sparingly)
+const el = document.getElementById('root') as HTMLDivElement
+
+// Non-null assertion — tell TS a value is definitely not null (risky)
+const el = document.getElementById('root')!
+
+// Type narrowing — TS figures out the type from a check
+const printValue = (val: string | number) =&gt; {
+  if (typeof val === 'string') {
+    console.log(val.toUpperCase())   // TS knows it's string here
+  } else {
+    console.log(val.toFixed(2))      // TS knows it's number here
+  }
+}</pre>
+  </div>
+
+  <div class="card">
     <div class="card-title">Key TypeScript rules for React</div>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Never use <code>any</code></strong><p>It disables all type checking. Use <code>unknown</code> if you genuinely don't know the type, then narrow it.</p></div></div>
@@ -1899,7 +3083,16 @@ const fetchPost = async (id: number): Promise&lt;Post&gt; =&gt; {
 <div class="section" id="statemanagement">
   <div class="page-header">
     <h1 class="page-title">State Management</h1>
-    <p class="page-sub">Match the tool to the type of state. Not every app needs Redux — most don't.</p>
+    <p class="page-sub">State is any data that changes over time and causes your UI to update. Choosing the right tool depends entirely on <em>what kind</em> of state you're managing.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">What is state management?</div>
+    <div class="card-desc">Every React app has state — from a simple boolean (is this modal open?) to complex server data (a list of orders from an API). "State management" is the pattern of deciding <strong>where state lives</strong>, <strong>how it changes</strong>, and <strong>who can access it</strong>.<br><br>The mistake most beginners make is reaching for Redux for everything. In reality, different types of state need different tools.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">What is "state" in React?</div>
+    <div class="card-desc"><strong>State</strong> is any data in your app that changes over time and affects what is displayed on screen. Examples: whether a modal is open, the items in a shopping cart, the current user&#8217;s profile, search results from an API.<br><br>React state has two important properties: (1) when state changes, React automatically re-renders the affected components, and (2) state is owned — it lives in exactly one place and is passed down to children that need it.<br><br>The challenge is deciding <em>where</em> each piece of state should live. State that only one component needs stays local (<code>useState</code>). State that many components across the app need becomes global (Context, Zustand, Redux).</div>
   </div>
   <div class="card">
     <div class="card-title">Types of state — pick the right tool</div>
@@ -1914,7 +3107,8 @@ const fetchPost = async (id: number): Promise&lt;Post&gt; =&gt; {
     </table></div>
   </div>
   <div class="card">
-    <div class="card-title">Zustand — simple, no-boilerplate global state</div>
+    <div class="card-title">Zustand — lightweight global state</div>
+    <div class="card-desc"><strong>What it is:</strong> Zustand (German for "state") is a tiny, fast state manager for React. You define a store — an object containing state values and functions that update them — and any component can read or write to it without a Provider wrapper.<br><br><strong>When to use it:</strong> When Context starts feeling clunky, when you need global state without Redux's boilerplate, or when you need state that multiple unrelated components share (shopping cart, notifications, user preferences).</div>
     <pre>npm install zustand</pre>
     <pre>import { create } from 'zustand'
 
@@ -1977,6 +3171,83 @@ const Counter = () =&gt; {
 }</pre>
   </div>
   <div class="card">
+    <div class="card-title">RTK Query &#8212; data fetching built into Redux Toolkit</div>
+    <div class="card-desc"><strong>What it is:</strong> RTK Query is a powerful data fetching and caching tool that comes bundled inside Redux Toolkit. If you&#8217;re already using RTK and need data fetching, you can use RTK Query instead of adding TanStack Query as a separate dependency.<br><br><strong>RTK Query vs TanStack Query:</strong> Both solve the same problem (server state management). TanStack Query is framework-agnostic, more flexible, and has a larger community. RTK Query integrates deeply with Redux DevTools and is ideal if your team is already committed to RTK for client state. <em>Pick one — don&#8217;t use both in the same app.</em></div>
+    <pre>// RTK Query &#8212; defined inside a createApi slice
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+
+export const postsApi = createApi({
+  reducerPath: 'postsApi',
+  baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
+  tagTypes: ['Post'],   // used for cache invalidation
+  endpoints: (builder) => ({
+    // READ
+    getPosts: builder.query({
+      query: () => '/posts',
+      providesTags: ['Post'],
+    }),
+    getPost: builder.query({
+      query: (id) => `/posts/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Post', id }],
+    }),
+    // CREATE
+    createPost: builder.mutation({
+      query: (body) => ({ url: '/posts', method: 'POST', body }),
+      invalidatesTags: ['Post'],   // auto-refetch getPosts after create
+    }),
+    // UPDATE
+    updatePost: builder.mutation({
+      query: ({ id, ...body }) => ({ url: `/posts/${id}`, method: 'PUT', body }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'Post', id }],
+    }),
+    // DELETE
+    deletePost: builder.mutation({
+      query: (id) => ({ url: `/posts/${id}`, method: 'DELETE' }),
+      invalidatesTags: ['Post'],
+    }),
+  }),
+})
+
+// Auto-generated hooks &#8212; use directly in components
+export const {
+  useGetPostsQuery,
+  useGetPostQuery,
+  useCreatePostMutation,
+  useUpdatePostMutation,
+  useDeletePostMutation,
+} = postsApi</pre>
+    <pre>// Add to store
+const store = configureStore({
+  reducer: {
+    [postsApi.reducerPath]: postsApi.reducer,
+    cart: cartSlice.reducer,
+  },
+  middleware: (getDefault) => getDefault().concat(postsApi.middleware),
+})</pre>
+    <pre>// PostList.jsx &#8212; use auto-generated hook
+const PostList = () => {
+  const { data: posts, isLoading, isError } = useGetPostsQuery()
+
+  if (isLoading) return &lt;p&gt;Loading...&lt;/p&gt;
+  if (isError)   return &lt;p&gt;Something went wrong&lt;/p&gt;
+
+  return &lt;ul&gt;{posts.map(p => &lt;li key={p.id}&gt;{p.title}&lt;/li&gt;)}&lt;/ul&gt;
+}
+
+// CreatePost.jsx
+const CreatePost = () => {
+  const [createPost, { isLoading }] = useCreatePostMutation()
+
+  return (
+    &lt;button onClick={() => createPost({ title: 'New Post', body: 'Content' })}&gt;
+      {isLoading ? 'Creating...' : 'Create Post'}
+    &lt;/button&gt;
+    // After success, RTK Query auto-invalidates the posts list cache
+  )
+}</pre>
+    <div class="info">RTK Query auto-generates hooks, handles cache invalidation via tags, and integrates with Redux DevTools. TanStack Query has more flexibility and a larger community. Both are excellent — pick based on whether you&#8217;re already using RTK.</div>
+  </div>
+  <div class="card">
     <div class="card-title">Decision guide</div>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-content"><strong>Start with useState + useReducer</strong><p>Covers most small-to-medium apps. Zero dependencies.</p></div></div>
@@ -1991,7 +3262,7 @@ const Counter = () =&gt; {
 <div class="section" id="testing">
   <div class="page-header">
     <h1 class="page-title">Testing</h1>
-    <p class="page-sub">Tests let you change code confidently without breaking things. Standard stack: Vitest + React Testing Library. Test behaviour, not implementation.</p>
+    <p class="page-sub">Tests are automated scripts that verify your components do what they're supposed to do. Without tests, every code change risks breaking something you didn't notice. The golden rule of React testing: test <strong>what the user experiences</strong> (text on screen, button clicks, form submission) — not internal implementation details (function calls, state values). This makes tests resilient to refactoring.</p>
   </div>
   <div class="card">
     <div class="card-title">Setup — Vitest + React Testing Library</div>
@@ -2071,6 +3342,103 @@ it('shows users after loading', async () =&gt; {
 })</pre>
   </div>
   <div class="card">
+    <div class="card-title">&#9656; Testing a form — the complete pattern</div>
+    <pre>import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import LoginForm from './LoginForm'
+
+describe('LoginForm', () =&gt; {
+  it('shows error when submitting empty form', async () =&gt; {
+    render(&lt;LoginForm onLogin={() =&gt; {}} /&gt;)
+
+    // Click submit without filling anything in
+    await userEvent.click(screen.getByRole('button', { name: /login/i }))
+
+    // Both errors should appear
+    expect(screen.getByText('Email is required')).toBeInTheDocument()
+    expect(screen.getByText('Password is required')).toBeInTheDocument()
+  })
+
+  it('calls onLogin with credentials on valid submit', async () =&gt; {
+    const mockLogin = vi.fn().mockResolvedValue({ user: { name: 'Aj' } })
+    render(&lt;LoginForm onLogin={mockLogin} /&gt;)
+
+    // Fill the form
+    await userEvent.type(screen.getByLabelText(/email/i), 'aj@example.com')
+    await userEvent.type(screen.getByLabelText(/password/i), 'mypassword123')
+
+    // Submit
+    await userEvent.click(screen.getByRole('button', { name: /login/i }))
+
+    // Assert the function was called with the right data
+    expect(mockLogin).toHaveBeenCalledWith({
+      email:    'aj@example.com',
+      password: 'mypassword123',
+    })
+  })
+
+  it('shows success message after login', async () =&gt; {
+    const mockLogin = vi.fn().mockResolvedValue({ user: { name: 'Aj' } })
+    render(&lt;LoginForm onLogin={mockLogin} /&gt;)
+
+    await userEvent.type(screen.getByLabelText(/email/i), 'aj@example.com')
+    await userEvent.type(screen.getByLabelText(/password/i), 'mypassword123')
+    await userEvent.click(screen.getByRole('button', { name: /login/i }))
+
+    // findBy waits for async — message appears after login resolves
+    expect(await screen.findByText(/welcome, aj/i)).toBeInTheDocument()
+  })
+})</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Mocking — replacing real things with fakes</div>
+    <div class="card-desc">Tests must be fast and reliable. Network requests, timers, and modules you don&#8217;t control should be <strong>mocked</strong> — replaced with a fake that behaves exactly as you specify.</div>
+    <pre>// Mock a module — replace the entire import
+vi.mock('../services/authService', () =&gt; ({
+  authService: {
+    login:  vi.fn(),
+    logout: vi.fn(),
+    signup: vi.fn(),
+  },
+}))
+
+// Then control the return value per test
+import { authService } from '../services/authService'
+
+it('shows error on failed login', async () =&gt; {
+  authService.login.mockRejectedValue(new Error('Invalid credentials'))
+  render(&lt;LoginForm /&gt;)
+  // ...
+  expect(await screen.findByText('Invalid credentials')).toBeInTheDocument()
+})
+
+it('redirects on success', async () =&gt; {
+  authService.login.mockResolvedValue({ token: 'abc', user: { id: 1 } })
+  render(&lt;LoginForm /&gt;)
+  // ...
+})
+
+// Mock window / browser APIs
+const mockNavigate = vi.fn()
+vi.mock('react-router-dom', () =&gt; ({
+  ...vi.importActual('react-router-dom'),
+  useNavigate: () =&gt; mockNavigate,
+}))
+
+// Mock timers
+vi.useFakeTimers()
+vi.advanceTimersByTime(500)   // fast-forward debounce
+vi.useRealTimers()            // restore after test
+
+// Mock fetch globally
+global.fetch = vi.fn().mockResolvedValue({
+  ok: true,
+  json: async () =&gt; ({ id: 1, name: 'Aj' }),
+})</pre>
+  </div>
+
+  <div class="card">
     <div class="card-title">Query methods</div>
     <div class="table-wrap"><table>
       <tr><th>Method</th><th>Use when</th><th>Not found</th></tr>
@@ -2080,6 +3448,114 @@ it('shows users after loading', async () =&gt; {
       <tr><td><code>getAllBy*</code></td><td>Multiple elements expected</td><td>Throws error</td></tr>
     </table></div>
     <div class="tip">Prefer <code>getByRole</code> — it tests accessibility too. Use <code>getByText</code> for non-interactive content. Avoid <code>getByTestId</code> unless nothing else works.</div>
+    <div class="info"><strong>waitFor vs findBy:</strong> Use <code>findBy*</code> to wait for an element to appear in the DOM. Use <code>waitFor(() =&gt; expect(...))</code> to wait for a non-element assertion — like a function being called or a value changing. <code>findByText('Done')</code> is equivalent to <code>waitFor(() =&gt; getByText('Done'))</code> but shorter.</div>
+  </div>
+</div>
+
+<!-- SECURITY -->
+<div class="section" id="security">
+  <div class="page-header">
+    <h1 class="page-title">Security Essentials</h1>
+    <p class="page-sub">Security mistakes in React apps are mostly about trusting user input. Understanding the basics protects your users and keeps your app off the breach headlines.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; XSS — Cross-Site Scripting</div>
+    <div class="card-desc"><strong>XSS</strong> is when an attacker injects malicious JavaScript into your page that runs in other users&#8217; browsers — stealing cookies, session tokens, or redirecting to phishing sites.<br><br><strong>React is safe by default.</strong> All values inside JSX expressions (<code>{value}</code>) are automatically escaped — <code>&lt;script&gt;</code> tags become plain text, never executable code. The only danger is when you deliberately bypass this.</div>
+    <pre>// SAFE — React escapes this automatically
+const userInput = '&lt;script&gt;alert("hacked!")&lt;/script&gt;'
+return &lt;p&gt;{userInput}&lt;/p&gt;
+// Renders as literal text: &lt;script&gt;alert("hacked!")&lt;/script&gt;
+
+// DANGEROUS — bypasses React's protection
+return &lt;div dangerouslySetInnerHTML={{ __html: userInput }} /&gt;
+// Actually runs the script! Only use with sanitised, trusted content</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; dangerouslySetInnerHTML — the only escape hatch</div>
+    <div class="card-desc">Sometimes you genuinely need to render HTML strings — from a rich text editor, a CMS, or markdown renderer. <code>dangerouslySetInnerHTML</code> is the only way to do this. Always sanitise the HTML first.</div>
+    <pre>// WRONG — render raw HTML from user or untrusted source
+&lt;div dangerouslySetInnerHTML={{ __html: rawHtml }} /&gt;
+
+// CORRECT — sanitise first, then render
+// npm install dompurify
+import DOMPurify from 'dompurify'
+
+const SafeHTML = ({ html }) => {
+  const clean = DOMPurify.sanitize(html, {
+    ALLOWED_TAGS:  ['p', 'b', 'i', 'em', 'strong', 'a', 'ul', 'ol', 'li'],
+    ALLOWED_ATTR:  ['href', 'target'],
+  })
+  return &lt;div dangerouslySetInnerHTML={{ __html: clean }} /&gt;
+}
+
+// Use cases where it's appropriate:
+// - Rendering output from a trusted rich-text editor (Quill, TipTap)
+// - Rendering sanitised markdown HTML
+// - Embedding trusted CMS content</pre>
+    <div class="warn">Never use <code>dangerouslySetInnerHTML</code> with user-generated content unless you sanitise it with DOMPurify first. One XSS vulnerability can compromise every user of your app.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; CORS — Cross-Origin Resource Sharing</div>
+    <div class="card-desc"><strong>CORS</strong> is a browser security mechanism. When your React app (on <code>localhost:5173</code>) makes a request to an API on a different domain (<code>api.example.com</code>), the browser blocks it unless the server explicitly allows it.<br><br>CORS is a <strong>server-side configuration</strong> — you cannot fix it from React. Your backend must send the right headers.</div>
+    <pre>// You see this error in the browser console:
+// "Access to fetch from origin 'http://localhost:5173' has been blocked by CORS policy"
+
+// WRONG — you cannot fix CORS from React
+fetch('https://api.example.com/users', {
+  headers: { 'Access-Control-Allow-Origin': '*' },  // this does nothing — server must set it
+})
+
+// FIX 1: Configure your backend to send CORS headers (Node/Express)
+// npm install cors
+app.use(cors({ origin: 'http://localhost:5173' }))
+
+// FIX 2: Proxy requests through Vite in development
+// vite.config.js
+export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://api.example.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      }
+    }
+  }
+})
+// Now fetch('/api/users') → proxied to https://api.example.com/users
+// No CORS because the request comes from the same origin
+
+// FIX 3: In production, your frontend and backend should share a domain
+// (e.g. both on api.yourapp.com) or use a reverse proxy (Nginx)</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Never store secrets in the frontend</div>
+    <pre>// WRONG — anyone can see this by viewing the page source
+const STRIPE_SECRET_KEY = 'sk_live_xxxxx'
+const DB_PASSWORD = 'mypassword'
+fetch(`/api?key=${STRIPE_SECRET_KEY}`)
+
+// React env vars (VITE_*) are bundled into the JS files
+// Users can read them with browser DevTools → Sources → bundle.js
+// Only use VITE_ vars for NON-SECRET things: API URLs, public keys, feature flags
+const API_URL  = import.meta.env.VITE_API_URL     // OK — not secret
+const PUB_KEY  = import.meta.env.VITE_STRIPE_PUBLIC_KEY  // OK — public key by design
+
+// CORRECT — secret operations go through your backend
+// Frontend calls YOUR server, your server calls Stripe with the secret key
+// User never sees the secret key
+const handlePayment = async (token) => {
+  const res = await fetch('/api/payment', {
+    method: 'POST',
+    body: JSON.stringify({ token }),  // send the payment token
+  })
+  // your server handles the Stripe charge with the secret key
+}</pre>
+    <div class="warn">Stripe, Twilio, AWS, OpenAI — all have public keys and secret keys. Public keys go in the frontend. Secret keys live only on your server. Never in React code.</div>
   </div>
 </div>
 
@@ -2087,7 +3563,7 @@ it('shows users after loading', async () =&gt; {
 <div class="section" id="deploy">
   <div class="page-header">
     <h1 class="page-title">Deployment</h1>
-    <p class="page-sub">Build your app into optimised files, then upload them. Vercel and Netlify are the fastest options — both work great for React apps.</p>
+    <p class="page-sub">Deployment is the process of making your app available on the internet. When you run <code>npm run build</code>, Vite compiles all your JSX, bundles all your modules, tree-shakes unused code, and minifies everything into plain HTML, CSS, and JavaScript files in the <code>dist/</code> folder. These static files can be hosted on any CDN. The key gotcha: React Router manages URLs in the browser, so the server must always serve <code>index.html</code> regardless of the URL path.</p>
   </div>
   <div class="card">
     <div class="card-title">Build for production</div>
@@ -2172,7 +3648,7 @@ npm run deploy</pre>
 <div class="section" id="vdom">
   <div class="page-header">
     <h1 class="page-title">Virtual DOM &amp; React Internals</h1>
-    <p class="page-sub">Understanding how React works under the hood helps you write better code and debug harder problems.</p>
+    <p class="page-sub">The Virtual DOM is React's performance strategy. Directly manipulating the browser's real DOM is slow — every change can trigger expensive layout recalculations and repaints. Instead, React maintains a lightweight JavaScript copy of the DOM in memory. When state changes, React builds a new virtual copy, <strong>diffs</strong> it against the previous one to find exactly what changed, then applies only those minimal changes to the real DOM.</p>
   </div>
   <div class="card">
     <div class="card-title">Why the Virtual DOM exists</div>
@@ -2290,6 +3766,1061 @@ setItems(newItems)
       <div class="step"><div class="step-num">&#8594;</div><div class="step-content"><strong>Learn Next.js next</strong><p>The majority of React job listings in 2025 mention Next.js. Once you know React well, Next.js takes 1–2 weeks to pick up.</p></div></div>
     </div>
   </div>
+</div>
+
+
+<!-- ══════════════ REDUX TOOLKIT DEEP DIVE ══════════════ -->
+<div class="section" id="reduxdeep">
+  <div class="page-header">
+    <h1 class="page-title">Redux Toolkit — Deep Dive</h1>
+    <p class="page-sub">Redux Toolkit (RTK) is the official, opinionated way to write Redux logic. It eliminates boilerplate, enforces best practices, and bundles everything you need — state slices, async actions, the store, and even an API layer (RTK Query).</p>
+  </div>
+
+  <!-- WHAT IS REDUX -->
+  <div class="card">
+    <div class="card-title">&#9656; What is Redux? Why does it exist?</div>
+    <div class="card-desc">Redux is a <strong>predictable state container</strong>. It enforces one rule: <em>state can only change through dispatched actions processed by pure reducer functions</em>. This single rule makes every state change traceable, testable, and replayable in DevTools.<br><br>React&#8217;s built-in tools (useState, Context) work well for UI state and moderate sharing. Redux becomes worthwhile when:<br>&bull; Many unrelated components need the same data<br>&bull; You need undo/redo or time-travel debugging<br>&bull; A large team needs strict conventions around state<br>&bull; State transitions are complex and need audit trails</div>
+    <div class="table-wrap"><table>
+      <tr><th>Core Concept</th><th>What it is</th><th>Simple analogy</th></tr>
+      <tr><td><strong>Store</strong></td><td>One JS object holding ALL app state</td><td>A database for your UI</td></tr>
+      <tr><td><strong>Slice</strong></td><td>A named chunk of state + its reducers</td><td>One table in that database</td></tr>
+      <tr><td><strong>Action</strong></td><td>Plain object <code>{type, payload}</code> describing what happened</td><td>A written instruction</td></tr>
+      <tr><td><strong>Reducer</strong></td><td>Pure function: <code>(state, action) => newState</code></td><td>The cashier processing the instruction</td></tr>
+      <tr><td><strong>Dispatch</strong></td><td>The function that sends an action to the store</td><td>Handing the instruction to the cashier</td></tr>
+      <tr><td><strong>Selector</strong></td><td>Function that reads a specific slice of state</td><td>A SQL query on your UI database</td></tr>
+      <tr><td><strong>Middleware</strong></td><td>Code that runs between dispatch and reducer</td><td>Security guard checking every instruction</td></tr>
+    </table></div>
+  </div>
+
+  <!-- INSTALL -->
+  <div class="card">
+    <div class="card-title">&#9656; Install &amp; Setup</div>
+    <pre>npm install @reduxjs/toolkit react-redux</pre>
+    <pre>// store.js — create your store (one per app)
+import { configureStore } from '@reduxjs/toolkit'
+import cartReducer     from './features/cart/cartSlice'
+import authReducer     from './features/auth/authSlice'
+import productsReducer from './features/products/productsSlice'
+
+export const store = configureStore({
+  reducer: {
+    cart:     cartReducer,
+    auth:     authReducer,
+    products: productsReducer,
+  },
+  // configureStore automatically adds:
+  // - redux-thunk middleware (for async actions)
+  // - Redux DevTools Extension support
+  // - Development checks (serializable state, etc.)
+})
+
+// TypeScript: export types for useSelector / useDispatch
+export type RootState   = ReturnType&lt;typeof store.getState&gt;
+export type AppDispatch = typeof store.dispatch</pre>
+    <pre>// main.jsx — wrap your entire app once
+import { Provider } from 'react-redux'
+import { store } from './store'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  &lt;Provider store={store}&gt;
+    &lt;App /&gt;
+  &lt;/Provider&gt;
+)</pre>
+    <div class="good">With RTK you never need to install redux-thunk or immer separately — both are included automatically.</div>
+  </div>
+
+  <!-- createSlice -->
+  <div class="card">
+    <div class="card-title">&#9656; createSlice — the heart of RTK</div>
+    <div class="card-desc"><code>createSlice</code> bundles initial state, all reducer functions, and auto-generated action creators into one place. It uses <strong>Immer</strong> internally, so you can write &#8220;mutating&#8221; code safely &#8212; Immer converts it to immutable updates behind the scenes.</div>
+    <pre>// features/cart/cartSlice.js
+import { createSlice } from '@reduxjs/toolkit'
+
+const cartSlice = createSlice({
+  name: 'cart',                          // prefix for action types: 'cart/addItem'
+  initialState: {
+    items: [],
+    coupon: null,
+    isOpen: false,
+  },
+
+  reducers: {
+    // Each key becomes an action creator automatically
+    addItem(state, action) {
+      const existing = state.items.find(i => i.id === action.payload.id)
+      if (existing) {
+        existing.quantity += 1           // Immer: "mutate" safely
+      } else {
+        state.items.push({ ...action.payload, quantity: 1 })
+      }
+    },
+
+    removeItem(state, action) {
+      state.items = state.items.filter(i => i.id !== action.payload)
+    },
+
+    updateQuantity(state, action) {
+      const { id, quantity } = action.payload
+      const item = state.items.find(i => i.id === id)
+      if (item) item.quantity = Math.max(1, quantity)
+    },
+
+    clearCart(state) {
+      state.items = []
+      state.coupon = null
+    },
+
+    applyCoupon(state, action) {
+      state.coupon = action.payload     // 'SAVE10', 'FLASH20', etc.
+    },
+
+    toggleCart(state) {
+      state.isOpen = !state.isOpen
+    },
+  },
+})
+
+// Export action creators (auto-generated from reducer names)
+export const {
+  addItem,
+  removeItem,
+  updateQuantity,
+  clearCart,
+  applyCoupon,
+  toggleCart,
+} = cartSlice.actions
+
+// Export selectors — keep them co-located with the slice
+export const selectCartItems  = (state) => state.cart.items
+export const selectCartIsOpen = (state) => state.cart.isOpen
+export const selectCartTotal  = (state) =>
+  state.cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0)
+export const selectCartCount  = (state) =>
+  state.cart.items.reduce((n, i) => n + i.quantity, 0)
+
+export default cartSlice.reducer</pre>
+  </div>
+
+  <!-- SELECTORS IN COMPONENTS -->
+  <div class="card">
+    <div class="card-title">&#9656; useSelector &amp; useDispatch — reading and writing state</div>
+    <div class="card-desc"><code>useSelector</code> subscribes a component to a specific slice of store state and re-renders it only when that slice changes. <code>useDispatch</code> gives you the dispatch function to send actions.</div>
+    <pre>// components/CartIcon.jsx — reads from store, dispatches actions
+import { useSelector, useDispatch } from 'react-redux'
+import { selectCartCount, selectCartIsOpen, toggleCart } from '../features/cart/cartSlice'
+
+const CartIcon = () => {
+  const count  = useSelector(selectCartCount)   // re-renders only when count changes
+  const isOpen = useSelector(selectCartIsOpen)
+  const dispatch = useDispatch()
+
+  return (
+    &lt;button onClick={() => dispatch(toggleCart())} aria-label="Cart"&gt;
+      &#128722; {count &gt; 0 &amp;&amp; &lt;span className="badge"&gt;{count}&lt;/span&gt;}
+    &lt;/button&gt;
+  )
+}
+
+// components/ProductCard.jsx — dispatch addItem
+import { useDispatch } from 'react-redux'
+import { addItem } from '../features/cart/cartSlice'
+
+const ProductCard = ({ product }) => {
+  const dispatch = useDispatch()
+
+  return (
+    &lt;div className="product-card"&gt;
+      &lt;img src={product.image} alt={product.name} /&gt;
+      &lt;h3&gt;{product.name}&lt;/h3&gt;
+      &lt;p&gt;${product.price}&lt;/p&gt;
+      &lt;button onClick={() => dispatch(addItem(product))}&gt;
+        Add to Cart
+      &lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+
+// components/CartDrawer.jsx — full cart UI
+import { useSelector, useDispatch } from 'react-redux'
+import { selectCartItems, selectCartTotal, removeItem, clearCart, applyCoupon } from '../features/cart/cartSlice'
+
+const CartDrawer = () => {
+  const items    = useSelector(selectCartItems)
+  const total    = useSelector(selectCartTotal)
+  const dispatch = useDispatch()
+
+  const discount  = total * 0.1   // simplified, real app would calculate from coupon
+
+  return (
+    &lt;aside&gt;
+      &lt;h2&gt;Your Cart&lt;/h2&gt;
+
+      {items.length === 0 &amp;&amp; &lt;p&gt;Your cart is empty&lt;/p&gt;}
+
+      {items.map(item => (
+        &lt;div key={item.id} className="cart-item"&gt;
+          &lt;span&gt;{item.name} x{item.quantity}&lt;/span&gt;
+          &lt;span&gt;${(item.price * item.quantity).toFixed(2)}&lt;/span&gt;
+          &lt;button onClick={() => dispatch(removeItem(item.id))}&gt;Remove&lt;/button&gt;
+        &lt;/div&gt;
+      ))}
+
+      &lt;div className="cart-total"&gt;
+        &lt;strong&gt;Total: ${total.toFixed(2)}&lt;/strong&gt;
+      &lt;/div&gt;
+
+      &lt;input
+        placeholder="Enter coupon code"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') dispatch(applyCoupon(e.target.value))
+        }}
+      /&gt;
+
+      &lt;button onClick={() => dispatch(clearCart())} className="danger"&gt;
+        Clear Cart
+      &lt;/button&gt;
+    &lt;/aside&gt;
+  )
+}</pre>
+    <div class="tip">Pass <strong>selector functions</strong> (not inline arrows) to <code>useSelector</code> where possible. Defined selectors are reusable, testable, and easier to memoize with <code>createSelector</code>.</div>
+  </div>
+
+  <!-- createAsyncThunk -->
+  <div class="card">
+    <div class="card-title">&#9656; createAsyncThunk — async actions (API calls)</div>
+    <div class="card-desc"><code>createAsyncThunk</code> wraps an async function and automatically dispatches <code>pending</code>, <code>fulfilled</code>, and <code>rejected</code> actions as the promise moves through its lifecycle. You handle these in <code>extraReducers</code>.</div>
+    <pre>// features/products/productsSlice.js
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { productService } from '../../services/productService'
+
+// 1. Define the async thunk
+export const fetchProducts = createAsyncThunk(
+  'products/fetchAll',                     // action type prefix
+  async (filters = {}, { rejectWithValue }) => {
+    try {
+      return await productService.getAll(filters)
+    } catch (err) {
+      // rejectWithValue sends a structured error to the rejected case
+      return rejectWithValue(err.response?.data?.message || err.message)
+    }
+  }
+)
+
+export const fetchProductById = createAsyncThunk(
+  'products/fetchOne',
+  async (id, { rejectWithValue }) => {
+    try {
+      return await productService.getById(id)
+    } catch (err) {
+      return rejectWithValue(err.message)
+    }
+  }
+)
+
+export const createProduct = createAsyncThunk(
+  'products/create',
+  async (productData, { rejectWithValue }) => {
+    try {
+      return await productService.create(productData)
+    } catch (err) {
+      return rejectWithValue(err.message)
+    }
+  }
+)
+
+// 2. Create slice with extraReducers handling the thunk lifecycle
+const productsSlice = createSlice({
+  name: 'products',
+  initialState: {
+    list:      [],
+    selected:  null,
+    loading:   false,
+    error:     null,
+    filters:   { category: 'all', sort: 'name' },
+  },
+  reducers: {
+    setFilter(state, action) {
+      state.filters = { ...state.filters, ...action.payload }
+    },
+    clearSelected(state) {
+      state.selected = null
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      // fetchProducts
+      .addCase(fetchProducts.pending, (state) => {
+        state.loading = true
+        state.error   = null
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.loading = false
+        state.list    = action.payload
+      })
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.loading = false
+        state.error   = action.payload    // the value from rejectWithValue
+      })
+
+      // fetchProductById
+      .addCase(fetchProductById.pending,   (state) => { state.loading = true })
+      .addCase(fetchProductById.fulfilled, (state, action) => {
+        state.loading  = false
+        state.selected = action.payload
+      })
+      .addCase(fetchProductById.rejected, (state, action) => {
+        state.loading = false
+        state.error   = action.payload
+      })
+
+      // createProduct — add to list on success
+      .addCase(createProduct.fulfilled, (state, action) => {
+        state.list.unshift(action.payload)
+      })
+  },
+})
+
+export const { setFilter, clearSelected } = productsSlice.actions
+
+// Selectors
+export const selectProducts       = (state) => state.products.list
+export const selectProductLoading = (state) => state.products.loading
+export const selectProductError   = (state) => state.products.error
+export const selectSelectedProduct = (state) => state.products.selected
+
+export default productsSlice.reducer</pre>
+    <pre>// components/ProductList.jsx — using the async thunk
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchProducts, setFilter, selectProducts, selectProductLoading, selectProductError } from '../features/products/productsSlice'
+
+const ProductList = () => {
+  const dispatch  = useDispatch()
+  const products  = useSelector(selectProducts)
+  const loading   = useSelector(selectProductLoading)
+  const error     = useSelector(selectProductError)
+
+  useEffect(() => {
+    dispatch(fetchProducts())   // triggers the async thunk
+  }, [dispatch])
+
+  const handleCategoryChange = (category) => {
+    dispatch(setFilter({ category }))
+    dispatch(fetchProducts({ category }))
+  }
+
+  if (loading) return &lt;p&gt;Loading products...&lt;/p&gt;
+  if (error)   return &lt;p&gt;Error: {error} &lt;button onClick={() => dispatch(fetchProducts())}&gt;Retry&lt;/button&gt;&lt;/p&gt;
+
+  return (
+    &lt;div&gt;
+      &lt;select onChange={(e) => handleCategoryChange(e.target.value)}&gt;
+        &lt;option value="all"&gt;All&lt;/option&gt;
+        &lt;option value="electronics"&gt;Electronics&lt;/option&gt;
+        &lt;option value="clothing"&gt;Clothing&lt;/option&gt;
+      &lt;/select&gt;
+
+      &lt;div className="product-grid"&gt;
+        {products.map(product => (
+          &lt;ProductCard key={product.id} product={product} /&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}</pre>
+  </div>
+
+  <!-- RTK QUERY -->
+  <div class="card">
+    <div class="card-title">&#9656; RTK Query — data fetching built into RTK</div>
+    <div class="card-desc"><code>RTK Query</code> is a powerful data fetching and caching tool bundled with Redux Toolkit. Instead of writing thunks + slice reducers for every API endpoint, you define all endpoints in one <code>createApi</code> call and get auto-generated hooks. It handles caching, background refetching, and cache invalidation via a <strong>tag system</strong>.</div>
+    <pre>// services/postsApi.js — define all endpoints once
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+
+export const postsApi = createApi({
+  reducerPath: 'postsApi',       // key in the Redux store
+  baseQuery: fetchBaseQuery({
+    baseUrl: '/api',
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem('token')
+      if (token) headers.set('Authorization', `Bearer ${token}`)
+      return headers
+    },
+  }),
+  tagTypes: ['Post', 'Comment'],  // cache tag categories
+
+  endpoints: (builder) => ({
+
+    // GET all posts
+    getPosts: builder.query({
+      query: (params = {}) => ({
+        url: '/posts',
+        params,                        // ?page=1&limit=10&category=react
+      }),
+      providesTags: (result) =>
+        result
+          ? [...result.map(({ id }) => ({ type: 'Post', id })), 'Post']
+          : ['Post'],
+    }),
+
+    // GET one post
+    getPost: builder.query({
+      query: (id) => `/posts/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Post', id }],
+    }),
+
+    // CREATE — mutation
+    createPost: builder.mutation({
+      query: (body) => ({ url: '/posts', method: 'POST', body }),
+      invalidatesTags: ['Post'],       // auto-refetch getPosts list
+    }),
+
+    // UPDATE — mutation
+    updatePost: builder.mutation({
+      query: ({ id, ...body }) => ({ url: `/posts/${id}`, method: 'PUT', body }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'Post', id }],
+    }),
+
+    // DELETE — mutation
+    deletePost: builder.mutation({
+      query: (id) => ({ url: `/posts/${id}`, method: 'DELETE' }),
+      invalidatesTags: (result, error, id) => [{ type: 'Post', id }, 'Post'],
+    }),
+
+    // GET comments for a post
+    getComments: builder.query({
+      query: (postId) => `/posts/${postId}/comments`,
+      providesTags: (result, error, postId) => [{ type: 'Comment', id: postId }],
+    }),
+  }),
+})
+
+// Auto-generated hooks — one per endpoint
+export const {
+  useGetPostsQuery,
+  useGetPostQuery,
+  useCreatePostMutation,
+  useUpdatePostMutation,
+  useDeletePostMutation,
+  useGetCommentsQuery,
+} = postsApi</pre>
+    <pre>// Add to store
+import { postsApi } from './services/postsApi'
+
+export const store = configureStore({
+  reducer: {
+    [postsApi.reducerPath]: postsApi.reducer,
+    cart: cartReducer,
+    auth: authReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(postsApi.middleware),
+})</pre>
+    <pre>// PostList.jsx — RTK Query read
+const PostList = () => {
+  const [page, setPage] = useState(1)
+  const {
+    data: posts = [],
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    refetch,
+  } = useGetPostsQuery({ page, limit: 10 })
+
+  return (
+    &lt;div&gt;
+      {isLoading  &amp;&amp; &lt;p&gt;Loading...&lt;/p&gt;}
+      {isFetching &amp;&amp; !isLoading &amp;&amp; &lt;p&gt;Refreshing...&lt;/p&gt;}
+      {isError    &amp;&amp; &lt;p&gt;Error: {error.message} &lt;button onClick={refetch}&gt;Retry&lt;/button&gt;&lt;/p&gt;}
+      {posts.map(p => &lt;PostCard key={p.id} post={p} /&gt;)}
+      &lt;button onClick={() => setPage(p => p - 1)} disabled={page === 1}&gt;Prev&lt;/button&gt;
+      &lt;button onClick={() => setPage(p => p + 1)}&gt;Next&lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+
+// CreatePostForm.jsx — RTK Query mutation
+const CreatePostForm = () => {
+  const [createPost, { isLoading, isSuccess, isError, error }] = useCreatePostMutation()
+  const [form, setForm] = useState({ title: '', body: '' })
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      await createPost(form).unwrap()    // .unwrap() throws on error
+      setForm({ title: '', body: '' })
+    } catch (err) {
+      console.error('Create failed:', err)
+    }
+  }
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} placeholder="Title" /&gt;
+      &lt;textarea value={form.body} onChange={e => setForm(p => ({ ...p, body: e.target.value }))} /&gt;
+      &lt;button disabled={isLoading}&gt;{isLoading ? 'Publishing...' : 'Publish'}&lt;/button&gt;
+      {isSuccess &amp;&amp; &lt;p&gt;Published! List refetched automatically.&lt;/p&gt;}
+      {isError   &amp;&amp; &lt;p&gt;Error: {error.message}&lt;/p&gt;}
+    &lt;/form&gt;
+  )
+}</pre>
+    <div class="good">RTK Query&#8217;s tag system is the key feature. When a mutation <code>invalidatesTags: ['Post']</code>, any active query that <code>providesTags: ['Post']</code> automatically refetches. Zero manual cache management.</div>
+  </div>
+
+  <!-- createSelector -->
+  <div class="card">
+    <div class="card-title">&#9656; createSelector — memoized derived state</div>
+    <div class="card-desc"><code>createSelector</code> from <code>reselect</code> (bundled with RTK) creates selectors that only recompute when their inputs change — preventing unnecessary re-renders when deriving expensive values from state.</div>
+    <pre>import { createSelector } from '@reduxjs/toolkit'
+
+const selectCartItems  = (state) => state.cart.items
+const selectCoupon     = (state) => state.cart.coupon
+const selectAllProducts = (state) => state.products.list
+
+// Memoized: only recalculates when items or coupon changes
+export const selectCartSummary = createSelector(
+  [selectCartItems, selectCoupon],
+  (items, coupon) => {
+    const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
+    const discount = coupon ? subtotal * 0.1 : 0
+    return {
+      subtotal: subtotal.toFixed(2),
+      discount: discount.toFixed(2),
+      total:    (subtotal - discount).toFixed(2),
+      itemCount: items.reduce((n, i) => n + i.quantity, 0),
+    }
+  }
+)
+
+// Usage in component
+const CartTotal = () => {
+  const { subtotal, discount, total, itemCount } = useSelector(selectCartSummary)
+  return (
+    &lt;div&gt;
+      &lt;p&gt;{itemCount} items&lt;/p&gt;
+      &lt;p&gt;Subtotal: ${subtotal}&lt;/p&gt;
+      {discount !== '0.00' &amp;&amp; &lt;p&gt;Discount: -${discount}&lt;/p&gt;}
+      &lt;p&gt;&lt;strong&gt;Total: ${total}&lt;/strong&gt;&lt;/p&gt;
+    &lt;/div&gt;
+  )
+}</pre>
+  </div>
+
+  <!-- WHEN TO USE -->
+  <div class="card">
+    <div class="card-title">&#9656; When to use Redux Toolkit vs alternatives</div>
+    <div class="table-wrap"><table>
+      <tr><th>Situation</th><th>Best choice</th><th>Why</th></tr>
+      <tr><td>Component-local toggle / form value</td><td>useState</td><td>No reason to put it in global store</td></tr>
+      <tr><td>Data from an API (server state)</td><td>TanStack Query or RTK Query</td><td>Caching, background sync — not a Redux concern</td></tr>
+      <tr><td>Global UI: theme, sidebar, notifications</td><td>Zustand or Context</td><td>Simpler, less boilerplate</td></tr>
+      <tr><td>Large app, many devs, complex state</td><td>Redux Toolkit</td><td>Strict patterns, DevTools, predictable</td></tr>
+      <tr><td>Already using RTK + need data fetching</td><td>RTK Query</td><td>Stays in Redux ecosystem, no extra dependency</td></tr>
+      <tr><td>Framework-agnostic data fetching</td><td>TanStack Query</td><td>Better API, larger community, works without Redux</td></tr>
+    </table></div>
+    <div class="info"><strong>Real-world recommendation:</strong> Most mid-size projects are best served by <strong>Zustand</strong> (client state) + <strong>TanStack Query</strong> (server state). Add Redux Toolkit only when you genuinely need its strict conventions — typically at 5+ developers or enterprise scale.</div>
+  </div>
+</div>
+
+<!-- ══════════════ REACT QUERY DEEP DIVE ══════════════ -->
+<div class="section" id="reactquerydeep">
+  <div class="page-header">
+    <h1 class="page-title">TanStack Query (React Query) — Deep Dive</h1>
+    <p class="page-sub">TanStack Query is the industry standard for managing server state in React. It handles fetching, caching, synchronising, and updating data from remote sources — so you don&#8217;t have to.</p>
+  </div>
+
+  <!-- WHAT IS IT -->
+  <div class="card">
+    <div class="card-title">&#9656; What problem does it solve?</div>
+    <div class="card-desc">Without TanStack Query, fetching data in React means writing the same pattern over and over:</div>
+    <pre>// WITHOUT React Query — you write this for every data source
+const [data, setData]     = useState(null)
+const [loading, setLoading] = useState(true)
+const [error, setError]   = useState(null)
+
+useEffect(() => {
+  setLoading(true)
+  fetch('/api/posts')
+    .then(r => r.json())
+    .then(data => { setData(data); setLoading(false) })
+    .catch(err => { setError(err); setLoading(false) })
+}, [])</pre>
+    <div class="card-desc" style="margin-top:8px">This misses: caching (re-fetches on every mount), background sync, request deduplication, pagination, optimistic updates, stale-while-revalidate. React Query handles all of this out of the box.</div>
+    <div class="table-wrap"><table>
+      <tr><th>Feature</th><th>Manual useEffect</th><th>TanStack Query</th></tr>
+      <tr><td>Caching</td><td>&#10060; Re-fetches every time</td><td>&#10004; Cache per queryKey</td></tr>
+      <tr><td>Background sync</td><td>&#10060; Manual</td><td>&#10004; Automatic on window focus</td></tr>
+      <tr><td>Request deduplication</td><td>&#10060; Multiple components = multiple requests</td><td>&#10004; Same key = one request</td></tr>
+      <tr><td>Loading / Error state</td><td>&#10060; Manual useState</td><td>&#10004; Built-in flags</td></tr>
+      <tr><td>Pagination</td><td>&#10060; Complex manual logic</td><td>&#10004; useInfiniteQuery</td></tr>
+      <tr><td>Optimistic updates</td><td>&#10060; Very complex</td><td>&#10004; onMutate pattern</td></tr>
+      <tr><td>Devtools</td><td>&#10060; Console.log</td><td>&#10004; Visual cache inspector</td></tr>
+    </table></div>
+  </div>
+
+  <!-- KEY CONCEPTS -->
+  <div class="card">
+    <div class="card-title">&#9656; Core concepts explained</div>
+    <div class="table-wrap"><table>
+      <tr><th>Concept</th><th>What it means</th><th>Default</th></tr>
+      <tr><td><strong>queryKey</strong></td><td>Unique array identifying a query. Changing it triggers a new fetch.</td><td>—</td></tr>
+      <tr><td><strong>queryFn</strong></td><td>Async function returning the data. Must throw on error.</td><td>—</td></tr>
+      <tr><td><strong>staleTime</strong></td><td>How long data is considered fresh. No refetch during this window.</td><td>0ms (always stale)</td></tr>
+      <tr><td><strong>gcTime</strong></td><td>How long unused cache is kept in memory before deletion.</td><td>5 minutes</td></tr>
+      <tr><td><strong>retry</strong></td><td>How many times to retry a failed request.</td><td>3</td></tr>
+      <tr><td><strong>refetchOnWindowFocus</strong></td><td>Refetch when user switches back to the tab.</td><td>true</td></tr>
+      <tr><td><strong>enabled</strong></td><td>Set to false to pause a query (e.g. wait for a param to exist).</td><td>true</td></tr>
+      <tr><td><strong>select</strong></td><td>Transform data before it reaches your component.</td><td>—</td></tr>
+      <tr><td><strong>placeholderData</strong></td><td>Show stale data while new data loads (keeps UI from flashing).</td><td>—</td></tr>
+    </table></div>
+  </div>
+
+  <!-- SETUP -->
+  <div class="card">
+    <div class="card-title">&#9656; Setup &amp; QueryClient configuration</div>
+    <pre>npm install @tanstack/react-query
+npm install -D @tanstack/react-query-devtools</pre>
+    <pre>// main.jsx
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime:            1000 * 60 * 5,    // 5 minutes
+      gcTime:               1000 * 60 * 10,   // 10 minutes
+      retry:                2,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect:   true,
+    },
+    mutations: {
+      onError: (error) => {
+        console.error('Mutation error:', error.message)
+        // global error handler, e.g. show a toast
+      },
+    },
+  },
+})
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  &lt;QueryClientProvider client={queryClient}&gt;
+    &lt;App /&gt;
+    {import.meta.env.DEV &amp;&amp; &lt;ReactQueryDevtools initialIsOpen={false} /&gt;}
+  &lt;/QueryClientProvider&gt;
+)</pre>
+  </div>
+
+  <!-- useQuery -->
+  <div class="card">
+    <div class="card-title">&#9656; useQuery — fetching data (READ)</div>
+    <div class="card-desc"><code>useQuery</code> fetches data, caches it by <code>queryKey</code>, and returns the current state. Every component sharing the same queryKey shares the same cached data — React Query deduplicates the actual network request.</div>
+    <pre>import { useQuery } from '@tanstack/react-query'
+
+// Simple query
+const { data, isLoading, isError } = useQuery({
+  queryKey: ['posts'],
+  queryFn:  () => fetch('/api/posts').then(r => r.json()),
+})
+
+// Query with parameters — key changes = new fetch
+const PostsByCategory = ({ category }) => {
+  const { data: posts = [], isLoading } = useQuery({
+    queryKey: ['posts', category],           // changes when category changes
+    queryFn:  () => fetch(`/api/posts?category=${category}`).then(r => r.json()),
+    staleTime: 1000 * 60,                    // override: 1 minute for this query
+  })
+
+  if (isLoading) return &lt;p&gt;Loading {category} posts...&lt;/p&gt;
+  return &lt;ul&gt;{posts.map(p => &lt;li key={p.id}&gt;{p.title}&lt;/li&gt;)}&lt;/ul&gt;
+}
+
+// Query with enabled flag — don't fetch until userId exists
+const UserProfile = ({ userId }) => {
+  const { data: user, isLoading } = useQuery({
+    queryKey: ['user', userId],
+    queryFn:  () => fetch(`/api/users/${userId}`).then(r => r.json()),
+    enabled:  !!userId,                      // only run when userId is truthy
+  })
+
+  if (!userId)   return &lt;p&gt;Not logged in&lt;/p&gt;
+  if (isLoading) return &lt;p&gt;Loading profile...&lt;/p&gt;
+  return &lt;div&gt;{user?.name}&lt;/div&gt;
+}
+
+// Query with select — transform data in the query layer
+const UserNames = () => {
+  const { data: names = [] } = useQuery({
+    queryKey: ['users'],
+    queryFn:  () => fetch('/api/users').then(r => r.json()),
+    select:   (data) => data.map(u => u.name),   // only names reach the component
+  })
+  return &lt;ul&gt;{names.map(name => &lt;li key={name}&gt;{name}&lt;/li&gt;)}&lt;/ul&gt;
+}
+
+// Query with placeholderData — no flash of empty while navigating
+const PostDetail = ({ postId }) => {
+  const queryClient = useQueryClient()
+  const { data: post, isPlaceholderData } = useQuery({
+    queryKey: ['post', postId],
+    queryFn:  () => fetch(`/api/posts/${postId}`).then(r => r.json()),
+    placeholderData: () => {
+      // Show existing list data while loading the full detail
+      const posts = queryClient.getQueryData(['posts'])
+      return posts?.find(p => p.id === postId)
+    },
+  })
+
+  return (
+    &lt;article style={{ opacity: isPlaceholderData ? 0.6 : 1 }}&gt;
+      &lt;h1&gt;{post?.title}&lt;/h1&gt;
+      &lt;p&gt;{post?.body}&lt;/p&gt;
+    &lt;/article&gt;
+  )
+}</pre>
+  </div>
+
+  <!-- useMutation -->
+  <div class="card">
+    <div class="card-title">&#9656; useMutation — writing data (CREATE / UPDATE / DELETE)</div>
+    <div class="card-desc"><code>useMutation</code> wraps an async function that modifies data on the server. Unlike <code>useQuery</code>, mutations run on demand (triggered by calling <code>mutate()</code> or <code>mutateAsync()</code>). They have lifecycle callbacks: <code>onMutate</code>, <code>onSuccess</code>, <code>onError</code>, <code>onSettled</code>.</div>
+    <pre>import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+// ── Real-world: Post management CRUD ─────────────────────────────────────────
+
+// CREATE
+const CreatePost = () => {
+  const queryClient = useQueryClient()
+  const [title, setTitle] = useState('')
+  const [body, setBody]   = useState('')
+
+  const createMutation = useMutation({
+    mutationFn: (newPost) => fetch('/api/posts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newPost),
+    }).then(r => r.json()),
+
+    onSuccess: (created) => {
+      // Strategy 1: Invalidate — refetch the list from server
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
+
+      // Strategy 2: Manual update — instant, no round-trip
+      // queryClient.setQueryData(['posts'], (old = []) => [created, ...old])
+
+      setTitle(''); setBody('')
+    },
+    onError: (err) => alert('Failed: ' + err.message),
+  })
+
+  return (
+    &lt;form onSubmit={(e) => { e.preventDefault(); createMutation.mutate({ title, body }) }}&gt;
+      &lt;input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" /&gt;
+      &lt;textarea value={body} onChange={e => setBody(e.target.value)} /&gt;
+      &lt;button disabled={createMutation.isPending}&gt;
+        {createMutation.isPending ? 'Publishing...' : 'Publish Post'}
+      &lt;/button&gt;
+    &lt;/form&gt;
+  )
+}
+
+// UPDATE
+const EditPost = ({ post }) => {
+  const queryClient = useQueryClient()
+  const [title, setTitle] = useState(post.title)
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, ...data }) => fetch(`/api/posts/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }).then(r => r.json()),
+
+    onSuccess: (updated) => {
+      // Update both list cache and detail cache
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
+      queryClient.setQueryData(['post', post.id], updated)
+    },
+  })
+
+  return (
+    &lt;div&gt;
+      &lt;input value={title} onChange={e => setTitle(e.target.value)} /&gt;
+      &lt;button
+        onClick={() => updateMutation.mutate({ id: post.id, title })}
+        disabled={updateMutation.isPending || title === post.title}
+      &gt;
+        {updateMutation.isPending ? 'Saving...' : 'Save'}
+      &lt;/button&gt;
+    &lt;/div&gt;
+  )
+}
+
+// DELETE
+const DeletePost = ({ postId }) => {
+  const queryClient = useQueryClient()
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => fetch(`/api/posts/${id}`, { method: 'DELETE' }),
+
+    onSuccess: (_, deletedId) => {
+      // Remove from list immediately
+      queryClient.setQueryData(['posts'], (old = []) => old.filter(p => p.id !== deletedId))
+      // Remove individual cache entry
+      queryClient.removeQueries({ queryKey: ['post', deletedId] })
+    },
+  })
+
+  return (
+    &lt;button
+      onClick={() => { if (confirm('Delete?')) deleteMutation.mutate(postId) }}
+      disabled={deleteMutation.isPending}
+    &gt;
+      {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+    &lt;/button&gt;
+  )
+}</pre>
+  </div>
+
+  <!-- OPTIMISTIC UPDATES -->
+  <div class="card">
+    <div class="card-title">&#9656; Optimistic Updates — instant UI, sync in background</div>
+    <div class="card-desc">Show the expected result <em>before</em> the server confirms it. If the server returns an error, automatically rollback. This makes apps feel instant — like native apps.</div>
+    <pre>const LikeButton = ({ post }) => {
+  const queryClient = useQueryClient()
+
+  const likeMutation = useMutation({
+    mutationFn: (postId) => fetch(`/api/posts/${postId}/like`, { method: 'POST' }),
+
+    // 1. Before the mutation fires — update cache optimistically
+    onMutate: async (postId) => {
+      // Cancel any in-flight refetches that could overwrite optimistic update
+      await queryClient.cancelQueries({ queryKey: ['post', postId] })
+
+      // Snapshot the previous value (for rollback)
+      const previous = queryClient.getQueryData(['post', postId])
+
+      // Optimistically update the cache
+      queryClient.setQueryData(['post', postId], (old) => ({
+        ...old,
+        likes:   (old?.likes ?? 0) + 1,
+        liked:   true,
+      }))
+
+      return { previous, postId }   // context passed to onError
+    },
+
+    // 2. If mutation fails — rollback to snapshot
+    onError: (err, postId, context) => {
+      queryClient.setQueryData(['post', context.postId], context.previous)
+      alert('Failed to like. Reverting.')
+    },
+
+    // 3. After success or error — sync with server
+    onSettled: (data, error, postId) => {
+      queryClient.invalidateQueries({ queryKey: ['post', postId] })
+    },
+  })
+
+  return (
+    &lt;button onClick={() => likeMutation.mutate(post.id)}&gt;
+      {post.liked ? '&#10084; Liked' : '&#9825; Like'} ({post.likes})
+    &lt;/button&gt;
+  )
+}</pre>
+    <div class="good">The <code>onMutate → onError → onSettled</code> pattern is the standard for optimistic updates. <code>onMutate</code> optimistically changes the cache, <code>onError</code> rolls back if needed, <code>onSettled</code> always syncs the final state.</div>
+  </div>
+
+  <!-- INFINITE SCROLL -->
+  <div class="card">
+    <div class="card-title">&#9656; useInfiniteQuery — infinite scroll &amp; load more</div>
+    <pre>import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInView } from 'react-intersection-observer'  // npm install react-intersection-observer
+
+const InfinitePostList = () => {
+  const { ref, inView } = useInView()
+
+  const {
+    data,               // { pages: [...], pageParams: [...] }
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: ['posts', 'infinite'],
+    queryFn:  ({ pageParam = 1 }) =>
+      fetch(`/api/posts?page=${pageParam}&limit=10`).then(r => r.json()),
+
+    getNextPageParam: (lastPage, allPages) => {
+      // Return next page number, or undefined if no more pages
+      return lastPage.hasMore ? allPages.length + 1 : undefined
+    },
+
+    initialPageParam: 1,
+  })
+
+  // Auto-fetch when the sentinel div scrolls into view
+  useEffect(() => {
+    if (inView &amp;&amp; hasNextPage) fetchNextPage()
+  }, [inView, hasNextPage, fetchNextPage])
+
+  if (isLoading) return &lt;p&gt;Loading...&lt;/p&gt;
+
+  return (
+    &lt;div&gt;
+      {data.pages.map((page, i) => (
+        &lt;React.Fragment key={i}&gt;
+          {page.posts.map(post => (
+            &lt;div key={post.id}&gt;
+              &lt;h2&gt;{post.title}&lt;/h2&gt;
+              &lt;p&gt;{post.excerpt}&lt;/p&gt;
+            &lt;/div&gt;
+          ))}
+        &lt;/React.Fragment&gt;
+      ))}
+
+      {/* Sentinel — triggers next page when visible */}
+      &lt;div ref={ref}&gt;
+        {isFetchingNextPage &amp;&amp; &lt;p&gt;Loading more...&lt;/p&gt;}
+        {!hasNextPage &amp;&amp; &lt;p&gt;No more posts.&lt;/p&gt;}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}</pre>
+  </div>
+
+  <!-- PARALLEL & DEPENDENT QUERIES -->
+  <div class="card">
+    <div class="card-title">&#9656; Parallel &amp; Dependent Queries</div>
+    <pre>// Parallel — both fire simultaneously
+const Dashboard = () => {
+  const { data: users }    = useQuery({ queryKey: ['users'],    queryFn: fetchUsers })
+  const { data: products } = useQuery({ queryKey: ['products'], queryFn: fetchProducts })
+  const { data: orders }   = useQuery({ queryKey: ['orders'],   queryFn: fetchOrders })
+  // React Query deduplicates and fires all 3 in parallel
+
+  return &lt;div&gt;{users?.length} users, {products?.length} products&lt;/div&gt;
+}
+
+// Dependent — second query waits for first to succeed
+const UserOrders = ({ userId }) => {
+  // Step 1: fetch user
+  const { data: user } = useQuery({
+    queryKey: ['user', userId],
+    queryFn:  () => fetchUser(userId),
+  })
+
+  // Step 2: fetch orders only when user.id is available
+  const { data: orders } = useQuery({
+    queryKey: ['orders', user?.id],
+    queryFn:  () => fetchOrdersByUser(user.id),
+    enabled:  !!user?.id,           // waits for user to load first
+  })
+
+  return &lt;ul&gt;{orders?.map(o => &lt;li key={o.id}&gt;Order #{o.id}&lt;/li&gt;)}&lt;/ul&gt;
+}</pre>
+  </div>
+
+  <!-- METHODS REFERENCE -->
+  <div class="card">
+    <div class="card-title">&#9656; QueryClient methods — full reference</div>
+    <div class="table-wrap"><table>
+      <tr><th>Method</th><th>What it does</th><th>When to use</th></tr>
+      <tr><td><code>invalidateQueries</code></td><td>Mark cache stale, trigger background refetch</td><td>After a mutation that changes server data</td></tr>
+      <tr><td><code>setQueryData</code></td><td>Manually overwrite the cache</td><td>Optimistic updates, instant UI after mutation</td></tr>
+      <tr><td><code>getQueryData</code></td><td>Read current cache value synchronously</td><td>Snapshot before optimistic update</td></tr>
+      <tr><td><code>removeQueries</code></td><td>Delete cache entries</td><td>After deleting a resource</td></tr>
+      <tr><td><code>cancelQueries</code></td><td>Cancel in-flight requests</td><td>Before optimistic update (prevent overwrite)</td></tr>
+      <tr><td><code>prefetchQuery</code></td><td>Fetch and cache without rendering a component</td><td>Hover prefetch, SSR, route-level prefetch</td></tr>
+      <tr><td><code>resetQueries</code></td><td>Reset to initial state and refetch</td><td>Pull-to-refresh, hard reset</td></tr>
+      <tr><td><code>refetchQueries</code></td><td>Force immediate refetch of matching queries</td><td>Manual refresh button</td></tr>
+    </table></div>
+    <pre>// Hover prefetch example — load data before user clicks
+const PostLink = ({ postId, title }) => {
+  const queryClient = useQueryClient()
+
+  return (
+    &lt;a
+      href={`/posts/${postId}`}
+      onMouseEnter={() => {
+        // Prefetch when user hovers — data is ready when they click
+        queryClient.prefetchQuery({
+          queryKey: ['post', postId],
+          queryFn:  () => fetchPost(postId),
+          staleTime: 1000 * 60,
+        })
+      }}
+    &gt;
+      {title}
+    &lt;/a&gt;
+  )
+}</pre>
+  </div>
+
+  <!-- COMPARISON -->
+  <div class="card">
+    <div class="card-title">&#9656; TanStack Query vs RTK Query — which to choose?</div>
+    <div class="table-wrap"><table>
+      <tr><th></th><th>TanStack Query</th><th>RTK Query</th></tr>
+      <tr><td><strong>Bundle size</strong></td><td>~13KB gzipped</td><td>Included in RTK (~12KB extra)</td></tr>
+      <tr><td><strong>Framework</strong></td><td>Framework-agnostic (React, Vue, Solid)</td><td>React + Redux only</td></tr>
+      <tr><td><strong>Setup</strong></td><td>QueryClient + Provider (simple)</td><td>createApi + store middleware + Provider</td></tr>
+      <tr><td><strong>Cache invalidation</strong></td><td>Manual via queryClient methods</td><td>Automatic via tag system</td></tr>
+      <tr><td><strong>Optimistic updates</strong></td><td>onMutate pattern — flexible</td><td>Supported but more verbose</td></tr>
+      <tr><td><strong>Infinite scroll</strong></td><td>useInfiniteQuery — first class</td><td>Supported but manual</td></tr>
+      <tr><td><strong>DevTools</strong></td><td>Standalone floating panel</td><td>Inside Redux DevTools</td></tr>
+      <tr><td><strong>Community</strong></td><td>Larger, more resources</td><td>Good, inside Redux ecosystem</td></tr>
+      <tr><td><strong>Best when</strong></td><td>Starting fresh, not using Redux</td><td>Already using RTK for client state</td></tr>
+    </table></div>
+    <div class="info"><strong>Bottom line for real projects:</strong><br>&bull; <strong>Not using Redux?</strong> Use TanStack Query — simpler setup, better API, more flexible.<br>&bull; <strong>Already using RTK?</strong> Use RTK Query — stays in one ecosystem, tag-based invalidation is elegant.<br>&bull; <strong>Never mix both</strong> in the same app — they solve the same problem.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">&#9656; React interview questions — what they really test</div>
+    <div class="card-desc">Interviewers rarely ask you to build a full app from scratch. They test whether you understand <em>why</em> React works the way it does. Here are the most common questions and what a strong answer sounds like:</div>
+    <div class="table-wrap"><table>
+      <tr><th>Question</th><th>What they want to hear</th></tr>
+      <tr><td>What is the Virtual DOM?</td><td>React keeps a JS copy of the DOM, diffs it on state change, then applies only the minimum changes to the real DOM — avoiding expensive full-page repaints</td></tr>
+      <tr><td>What is reconciliation?</td><td>The process of comparing old vs new virtual DOM and computing the minimal set of real DOM updates needed</td></tr>
+      <tr><td>Why do we need keys in lists?</td><td>Keys help React identify which items changed, moved, or were added/removed — preventing wrong state being attached to the wrong element after reorder</td></tr>
+      <tr><td>What is a controlled component?</td><td>An input whose value is controlled by React state — every keystroke calls setState, making React the single source of truth for the value</td></tr>
+      <tr><td>What is prop drilling?</td><td>Passing props through intermediate components that don&#8217;t use them just to reach a deeply nested one — Context or state management libraries solve this</td></tr>
+      <tr><td>When would you use useCallback?</td><td>When passing a function as a prop to a memoised child — without it, a new function reference is created each render, making memo() ineffective</td></tr>
+      <tr><td>What is a side effect?</td><td>Anything a component does outside of returning JSX — fetching data, setting timers, subscribing to events, updating document.title. Handle with useEffect.</td></tr>
+      <tr><td>What is a stale closure?</td><td>When a function inside useEffect captures an old value of state/props and never sees the updated value. Fixed with the updater form or correct dependency array.</td></tr>
+      <tr><td>Controlled vs uncontrolled?</td><td>Controlled: React state owns the value (via value + onChange). Uncontrolled: DOM owns it, you read via ref. Use controlled for almost everything.</td></tr>
+      <tr><td>useState vs useReducer?</td><td>useState for simple independent values. useReducer when you have 3+ related values or complex logic where next state depends on current state.</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; Top 10 mistakes beginners make in React</div>
+    <div class="table-wrap"><table>
+      <tr><th>#</th><th>Mistake</th><th>The fix</th></tr>
+      <tr><td>1</td><td>Mutating state directly: <code>state.items.push(x)</code></td><td>Always return a new value: <code>setState([...state.items, x])</code></td></tr>
+      <tr><td>2</td><td>Using <code>index</code> as list key when items can change</td><td>Use a stable unique ID from your data</td></tr>
+      <tr><td>3</td><td>Calling handlers with parentheses: <code>onClick={fn()}</code></td><td>Pass a reference: <code>onClick={fn}</code></td></tr>
+      <tr><td>4</td><td>Missing <code>e.preventDefault()</code> on form submit</td><td>Always add it — stops the page from reloading</td></tr>
+      <tr><td>5</td><td>Making useEffect async directly</td><td>Define an inner async function and call it</td></tr>
+      <tr><td>6</td><td>Empty dependency array when effect uses changing values</td><td>Add all values the effect reads to the dependency array</td></tr>
+      <tr><td>7</td><td>Not cleaning up subscriptions/timers in useEffect</td><td>Return a cleanup function from useEffect</td></tr>
+      <tr><td>8</td><td>Putting everything in a single giant Context</td><td>Split into focused contexts by concern</td></tr>
+      <tr><td>9</td><td>Fetching data with useEffect everywhere</td><td>Use TanStack Query — it handles caching and deduplication</td></tr>
+      <tr><td>10</td><td>Over-optimising with useMemo/useCallback everywhere</td><td>Profile first. Add memo only where you see actual slowness</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#9656; What a great React codebase looks like</div>
+    <div class="card-desc">After building several real projects, you should be able to look at a codebase and recognise these qualities:</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">&#10003;</div><div class="step-content"><strong>Components are small and focused</strong><p>Each component does one thing. If a component is over ~100 lines, it probably needs splitting.</p></div></div>
+      <div class="step"><div class="step-num">&#10003;</div><div class="step-content"><strong>Logic lives in custom hooks</strong><p>Components render UI. Data fetching, business logic, and side effects live in hooks.</p></div></div>
+      <div class="step"><div class="step-num">&#10003;</div><div class="step-content"><strong>State lives as low as possible</strong><p>State is only lifted as high as needed. Not everything goes in Context or a global store.</p></div></div>
+      <div class="step"><div class="step-num">&#10003;</div><div class="step-content"><strong>Server state is handled by TanStack Query</strong><p>No manual useEffect data fetching. Cache, loading, and error states are automatic.</p></div></div>
+      <div class="step"><div class="step-num">&#10003;</div><div class="step-content"><strong>TypeScript everywhere</strong><p>Every prop, every function signature, every API response is typed. No <code>any</code>.</p></div></div>
+    </div>
+  </div>
+
 </div>
 
 </main>
